@@ -1,6 +1,7 @@
 import { createHashRouter, RouteObject } from 'react-router-dom';
 import DashboardApp from '@/dashboard/App';
-import WorkFlows from '@/dashboard/pages/Workflows';
+import Workflows from '@/dashboard/pages/Workflows';
+import WorkflowDetail from '@/dashboard/pages/WorkflowDetail';
 
 const routes: RouteObject[] = [
   {
@@ -8,8 +9,12 @@ const routes: RouteObject[] = [
     element: <DashboardApp />,
     children: [
       {
-        index: true,
-        element: <WorkFlows />,
+        index: true, // 父级的默认子路由
+        element: <Workflows />,
+      },
+      {
+        path: 'workflow/:id',
+        element: <WorkflowDetail />,
       },
     ],
   },
