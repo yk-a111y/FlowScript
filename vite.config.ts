@@ -29,5 +29,5 @@ export default defineConfig({
       plugins: [tailwindcss, autoprefixer],
     },
   },
-  plugins: [react()],
+  plugins: [react()], // 官方react插件，提供 React 项目编译和热更新的功能
 });
