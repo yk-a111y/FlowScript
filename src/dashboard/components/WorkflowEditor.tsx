@@ -1,4 +1,4 @@
-import { getBlocks } from '@/utils/getSharedData';
+// import { getBlocks } from '@/utils/getSharedData';
 import {
   addEdge,
   Background,
@@ -10,8 +10,14 @@ import {
   useNodesState,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { IWorkflowDrawflow } from '../type';
 
-const WorkflowEditor = () => {
+interface WorkflowEditorProps {
+  editorData: IWorkflowDrawflow;
+}
+
+const WorkflowEditor = ({ editorData }: WorkflowEditorProps) => {
+  console.log('🚀 ~ WorkflowEditor ~ editorData:', editorData);
   const initialNodes = [
     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
     { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
@@ -23,7 +29,7 @@ const WorkflowEditor = () => {
     setEdges((eds) => addEdge(params, eds));
   };
 
-  const blocks = getBlocks();
+  // const blocks = getBlocks();
 
   return (
     <>

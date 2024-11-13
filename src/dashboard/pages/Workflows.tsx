@@ -1,13 +1,6 @@
-import { useEffect } from 'react';
-import { useWorkflowStore } from '@/store/workflow';
 import WorkflowsLocal from '../components/WorkflowsLocal';
 
 const Workflows = () => {
-  const { workflows } = useWorkflowStore();
-
-  useEffect(() => {
-    console.log('🚀 ~ Workflows ~ workflows:', workflows);
-  });
   return (
     <div className="container pt-8 pb-4">
       <h1 className="text-2xl font-semibold capitalize">工作流</h1>

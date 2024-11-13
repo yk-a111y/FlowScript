@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import UiCard from '@/components/ui/UiCard';
 import { FaInfoCircle } from 'react-icons/fa';
 import { RiPlayLine, RiGlobalLine } from 'react-icons/ri';
+import { IWorkflow } from '../type';
 
 interface WorkflowsLocalCardProps {
-  workflow: Workflow;
+  workflow: IWorkflow;
 }
 
 const WorkflowsLocalCard = ({ workflow }: WorkflowsLocalCardProps) => {
@@ -30,7 +31,7 @@ const WorkflowsLocalCard = ({ workflow }: WorkflowsLocalCardProps) => {
         {/* workflow info */}
         <div
           className="workflow-info flex-1 cursor-pointer"
-          onClick={() => navigate(`/workflow/${123}`)}
+          onClick={() => navigate(`/workflow/${workflow.id}`)}
         >
           <p className="line-clamp font-semibold leading-tight">
             {workflow.name}

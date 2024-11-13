@@ -10,7 +10,7 @@ const WorkflowBlockList = () => {
       name: block.name,
     };
   });
-  console.log('🚀 ~ blocksArr ~ blocksArr:', blocksArr);
+  // console.log('🚀 ~ blocksArr ~ blocksArr:', blocksArr);
   return (
     <div className="edit-block mb-4 grid grid-cols-2 gap-2">
       {blocksArr.map((block) => {

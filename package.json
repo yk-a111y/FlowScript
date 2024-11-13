@@ -13,6 +13,7 @@
     "@tailwindcss/typography": "^0.5.15",
     "@xyflow/react": "^12.3.4",
     "autoprefixer": "^10.4.20",
+    "defu": "^6.1.4",
     "nanoid": "^5.0.8",
     "postcss": "^8.4.47",
     "react": "^18.3.1",

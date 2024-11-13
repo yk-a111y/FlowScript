@@ -9,7 +9,7 @@ const DashBoardApp = () => {
   // Init Data
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, []);
 
   return (
     <div className="m-4">
