@@ -1,3 +1,132 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .hoverable {
+    @apply hover:bg-gray-800 hover:bg-opacity-5 dark:hover:bg-gray-200 dark:hover:bg-opacity-5;
+  }
+  .bg-input {
+    @apply bg-black bg-opacity-5 hover:bg-opacity-10 dark:bg-gray-200 dark:bg-opacity-5 dark:hover:bg-opacity-10;
+  }
+  .bg-box-transparent {
+    @apply bg-black bg-opacity-5 dark:bg-gray-200 dark:bg-opacity-5;
+  }
+  .bg-box-transparent-2 {
+    @apply bg-black bg-opacity-10 dark:bg-gray-200 dark:bg-opacity-10;
+  }
+}
+
+:host,
+:root {
+  --color-primary: 59 130 246;
+  --color-secondary: 96 165 250;
+  --color-accent: 24 24 27;
+}
+.dark {
+  --color-primary: 96 165 250;
+  --color-secondary: 59 130 246;
+  --color-accent: 244 244 245;
+}
+
+* {
+  @apply dark:border-gray-700;
+}
+
+html.dark {
+  @apply bg-gray-900;
+}
+
+body,
+:host {
+  font-family: 'Inter var', sans-serif !important;
+  font-size: 16px !important;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  @apply bg-gray-50 dark:bg-gray-900 leading-normal;
+}
+table th,
+table td {
+  @apply py-2 px-4;
+}
+input:focus,
+button:focus,
+textarea:focus,
+select:focus,
+[role='button']:focus {
+  outline: none;
+  @apply ring-2 ring-accent dark:ring-gray-200;
+}
+
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-table thead {
+  @apply bg-box-transparent;
+}
+.custom-table thead th {
+  @apply font-semibold;
+}
+.custom-table thead th:first-child {
+  @apply rounded-l-lg;
+}
+.custom-table thead th:last-child {
+  @apply rounded-r-lg;
+}
+.custom-table tbody {
+  @apply divide-y;
+}
+
+pre {
+  font-size: 15px;
+}
+
+.scroll,
+.scroll .cm-scroller {
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 9px;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-700;
+    border-radius: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &.scroll-xs::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+.tippy-box[data-theme~='tooltip-theme'] {
+  @apply px-2 py-1 bg-gray-900 dark:bg-gray-200 dark:text-black text-sm text-gray-200 rounded-md;
+}
+.Vue-Toastification__toast {
+  font-family: inherit !important;
+}
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 3px solid #68cef8;
+}
+
+.input-label {
+  @apply ml-1 text-sm text-gray-600 dark:text-gray-200;
+}

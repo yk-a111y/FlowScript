@@ -1,0 +1,62 @@
+.vue-flow__minimap {
+	@apply rounded-lg dark:bg-gray-800;
+}
+
+.vue-flow__node {
+	& > div {
+		@apply rounded-lg transition;
+	}
+	&.selected .block-base__content {
+		@apply ring-2 ring-accent;
+	}
+	&:hover {
+		.block-menu-container {
+			display: block;
+		}
+	}
+
+	&.vue-flow__node-BlockGroup2 {
+		z-index: 0 !important;
+	}
+
+	.vue-flow__handle {
+		@apply h-4 w-4 rounded-full border-0;
+		&.target {
+			@apply bg-accent -ml-4;
+		}
+		&.source {
+			border-width: 3px;
+			@apply border-accent -mr-4 bg-white dark:bg-black;
+		}
+	}
+}
+
+.vue-flow {
+	&.disabled {
+		.vue-flow__handle {
+			pointer-events: none;
+		}
+	}
+	svg g.connected-edges path {
+		stroke:  theme('colors.primary');
+	}
+}
+
+.vue-flow__edge {
+	cursor: pointer;
+	&.selected .vue-flow__edge-path {
+		stroke: theme('colors.green.300');
+	}
+}
+
+.dark .vue-flow__edge-path:hover {
+	stroke: theme('colors.yellow.400');
+}
+.vue-flow__edge-path {
+  stroke: theme('colors.accent');
+  stroke-width: 4;
+  transition: stroke 100ms ease;
+  &:hover {
+		stroke: theme('colors.yellow.500');
+  }
+}
