@@ -1,50 +1,72 @@
-// import { getBlocks } from '@/utils/getSharedData';
 import {
-  addEdge,
   Background,
   BackgroundVariant,
-  Connection,
   MiniMap,
   ReactFlow,
+  ReactFlowInstance,
   useEdgesState,
   useNodesState,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { IWorkflowDrawflow } from '../type';
+import { useEffect, useMemo } from 'react';
+import BlockBasic from '@/components/block/BlockBasic';
+// import { getBlocks } from '@/utils/getSharedData';
 
 interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
+  workflowId?: string;
+  onInit: (instance: ReactFlowInstance) => void;
 }
 
-const WorkflowEditor = ({ editorData }: WorkflowEditorProps) => {
-  console.log('🚀 ~ WorkflowEditor ~ editorData:', editorData);
-  const initialNodes = [
-    { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-  ];
-  const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+const WorkflowEditor = ({
+  editorData,
+  workflowId = 'editor',
+  onInit,
+}: WorkflowEditorProps) => {
+  // Init nodes and edges
+  const { nodes: initialNodes, edges: initialEdges } = editorData;
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  console.log('🚀 ~ nodes:', nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const onConnect = (params: Connection) => {
-    setEdges((eds) => addEdge(params, eds));
+  console.log('🚀 ~ edges:', edges);
+
+  // Init editor instance
+  const editorInstance = useReactFlow();
+
+  // fetch nodeTypes
+  const nodeTypes = useMemo(() => ({ BlockBasic }), []);
+
+  useEffect(() => {
+    applyFlowData();
+    window.addEventListener('mousedown', onMousedown, true);
+    onInit(editorInstance);
+
+    return () => {
+      window.removeEventListener('mousedown', onMousedown, true);
+    };
+  }, []);
+
+  const applyFlowData = () => {};
+
+  const onMousedown = (event: MouseEvent) => {
+    if (event.shiftKey) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
   };
 
-  // const blocks = getBlocks();
-
   return (
-    <>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <MiniMap />
+    <div
+      className="workflow-editor focus:outline-none"
+      style={{ height: 'calc(100vh - 40px)' }}
+    >
+      <ReactFlow fitView nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
+        <MiniMap className="hidden md:block" />
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
-    </>
+    </div>
   );
 };
 

@@ -13,8 +13,6 @@ interface WorkflowStoreState {
   setWorkflows: (newWorkflows: IWorkflow[]) => void;
 }
 
-let isFirstTime: boolean = true;
-
 export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
   workflows: {},
   loadData: () => {
@@ -24,16 +22,13 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
     // ]);
 
     let localWorkflows: IWorkflow[] = [];
-    if (isFirstTime) {
-      localWorkflows = firstWorkflows.map((workflow) => {
-        return defaultWorkflows(workflow);
-      });
-      isFirstTime = false;
+    localWorkflows = firstWorkflows.map((workflow) => {
+      return defaultWorkflows(workflow);
+    });
 
-      set({
-        workflows: convertWorkflowsToObject(localWorkflows),
-      });
-    }
+    set({
+      workflows: convertWorkflowsToObject(localWorkflows),
+    });
   },
   // getter
   getWorkflows: () => Object.values(get().workflows) as IWorkflow[],
@@ -65,7 +60,7 @@ const defaultWorkflows = (
   options: DefaultWorkflowOptions = {}
 ) => {
   let workflowData: IWorkflow = {
-    id: nanoid(),
+    id: 'K_DOm5PCBGSWf1e90io1a',
     name: '',
     icon: 'riGlobalLine',
     folderId: null,

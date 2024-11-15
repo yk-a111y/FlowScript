@@ -1,10 +1,9 @@
-import React, { ElementType } from 'react';
+import { ElementType, PropsWithChildren } from 'react';
 
-interface UiCardProps {
+interface UiCardProps extends PropsWithChildren {
   hover?: boolean;
   padding?: string;
   tag?: ElementType;
-  children: React.ReactNode;
   className?: string;
 }
 

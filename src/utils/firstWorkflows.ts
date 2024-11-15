@@ -24,10 +24,10 @@ const nodes = [
       url: 'https://live.kuaishou.com/u/3xssryfshxy33uu',
       userAgent: '',
       waitTabLoaded: false,
+      label: 'new-tab',
     },
     events: {},
     id: '7bia12p',
-    label: 'new-tab',
     position: {
       x: 680,
       y: 36,
@@ -49,10 +49,10 @@ const nodes = [
         debugMode: false,
       },
       timeout: 20000,
+      label: 'javascript-code',
     },
     events: {},
     id: 'r0re6is',
-    label: 'javascript-code',
     position: {
       x: 1554.684096971826,
       y: 37.27159220860314,
@@ -81,23 +81,24 @@ const nodes = [
       useJson: false,
       value: '',
       variableName: 'siteCookie',
+      label: 'cookie',
     },
     events: {},
     id: '7utnt7e',
-    label: 'cookie',
     position: {
       x: 972,
       y: 36,
     },
     type: 'BlockBasic',
   },
-]
+];
 
 export default [
   {
     extVersion: '1.28.27',
+    id: 'K_DOm5PCBGSWf1e90io1a',
     name: '测试工作流',
-    icon: 'riGlobalLine',
+    icon: 'RiGlobalLine',
     table: [
       {
         id: 'LhNWl',
@@ -113,27 +114,10 @@ export default [
     version: '1.28.27',
     drawflow: {
       edges: [
-        { id: '1-2', source: '1', target: '2' }
+        { id: '1-2', source: '7bia12p', target: '7utnt7e' },
+        { id: '2-3', source: '7utnt7e', target: 'r0re6is' },
       ],
-      nodes: [
-        {
-          id: '1',
-          data: { label: 'Hello' },
-          position: { x: 0, y: 0 },
-          type: 'input',
-        },
-        {
-          id: '2',
-          data: { label: 'World' },
-          position: { x: 100, y: 100 },
-        },
-        {
-          id: '3',
-          data: { label: 'Test' },
-          position: { x: 400, y: 150 },
-          type: 'BlockBasic',
-        }
-      ],
+      nodes: nodes,
       position: [-1436.15635541965, 100.17791489822486],
       viewport: {
         x: -1436.15635541965,

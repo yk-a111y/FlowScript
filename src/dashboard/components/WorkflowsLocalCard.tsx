@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import UiCard from '@/components/ui/UiCard';
-import { FaInfoCircle } from 'react-icons/fa';
-import { RiPlayLine, RiGlobalLine } from 'react-icons/ri';
+import UiIcon from '@/components/ui/UiIcon';
 import { IWorkflow } from '../type';
 
 interface WorkflowsLocalCardProps {
@@ -16,16 +15,16 @@ const WorkflowsLocalCard = ({ workflow }: WorkflowsLocalCardProps) => {
         <div className="mb-4 flex items-center">
           <span className="bg-box-transparent rounded-lg p-2">
             {workflow.icon ? (
-              <RiGlobalLine size={24} />
+              <UiIcon name={workflow.icon} />
             ) : (
-              <FaInfoCircle size={24} />
+              <UiIcon name="FaInfoCircle" />
             )}
           </span>
           <button
             v-if="!workflow.isDisabled"
             className="invisible group-hover:visible"
           >
-            <RiPlayLine size={24} />
+            <UiIcon name="RiPlayLine" />
           </button>
         </div>
         {/* workflow info */}
