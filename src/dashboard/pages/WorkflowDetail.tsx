@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
 import { useWorkflowStore } from '@/store/workflow';
@@ -7,12 +7,12 @@ import WorkflowEditor from '../components/WorkflowEditor';
 
 const WorkflowDetail = () => {
   // 从路由参数中获取workflowId
-  const { id: workflowId } = useParams();
+  const { id: workflowId = '' } = useParams<{ id: string }>();
   const { getWorkflowById } = useWorkflowStore();
-  const workflow = getWorkflowById(workflowId as string);
-  console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
+  const workflow = getWorkflowById(workflowId);
+  // console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
 
-  const [editor, setEditor] = useState<ReactFlowInstance>();
+  // const [editor, setEditor] = useState<ReactFlowInstance>();
 
   const editorData = useMemo(() => {
     return workflow.drawflow;
@@ -20,11 +20,10 @@ const WorkflowDetail = () => {
   console.log('🚀 ~ editorData ~ editorData:', editorData);
 
   const onEditorInit = (instance: ReactFlowInstance) => {
-    setEditor(instance);
-    // console.log('🚀 ~ onEditorInit ~ editorData:', instance);
-    // instance.updateEdge(onEdgesChange);
-    // instance.updateNode(onNodesChange);
+    console.log('🚀 ~ onEditorInit ~ instance:', instance);
+    // setEditor(instance);
   };
+
   return (
     <div className="flex">
       {/* 左侧Block区 */}
@@ -35,11 +34,7 @@ const WorkflowDetail = () => {
         style={{ height: '100vh', width: '100vw' }}
       >
         <ReactFlowProvider>
-          <WorkflowEditor
-            editorData={editorData}
-            workflowId={workflowId}
-            onInit={onEditorInit}
-          />
+          <WorkflowEditor editorData={editorData} onInit={onEditorInit} />
         </ReactFlowProvider>
       </div>
     </div>

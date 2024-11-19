@@ -26,9 +26,9 @@ const CustomEdge = ({
   targetPosition,
   style,
   label,
-  markerEnd,
-}: CustomEdgeProps) => {
-  console.log('🚀 ~ markerEnd:', markerEnd);
+}: // markerEnd,
+CustomEdgeProps) => {
+  // console.log('🚀 ~ markerEnd:', markerEnd);
   const path = useMemo(() => {
     const options = {
       sourceX,

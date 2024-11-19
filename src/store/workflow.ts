@@ -21,9 +21,8 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
     //   'isFirstTime',
     // ]);
 
-    let localWorkflows: IWorkflow[] = [];
-    localWorkflows = firstWorkflows.map((workflow) => {
-      return defaultWorkflows(workflow);
+    const localWorkflows: IWorkflow[] = firstWorkflows.map((workflow) => {
+      return defaultWorkflows(workflow); // Ensure the return type matches IWorkflow
     });
 
     set({

@@ -1,8 +1,13 @@
 import {
   addEdge,
+  applyEdgeChanges,
+  applyNodeChanges,
   Background,
   BackgroundVariant,
+  Edge,
+  EdgeChange,
   MiniMap,
+  NodeChange,
   ReactFlow,
   ReactFlowInstance,
   useEdgesState,
@@ -14,25 +19,30 @@ import { IWorkflowDrawflow } from '../type';
 import { useCallback, useEffect, useMemo } from 'react';
 import BlockBasic from '@/components/block/BlockBasic';
 import CustomEdge from '@/components/common/CustomEdge';
-// import { getBlocks } from '@/utils/getSharedData';
 
 interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
-  workflowId?: string;
   onInit: (instance: ReactFlowInstance) => void;
 }
 
-const WorkflowEditor = ({
-  editorData,
-  workflowId = 'editor',
-  onInit,
-}: WorkflowEditorProps) => {
+const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
   // Init nodes and edges
   const { nodes: initialNodes, edges: initialEdges } = editorData;
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  console.log('🚀 ~ nodes:', nodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  console.log('🚀 ~ edges:', edges);
+  const [nodes, setNodes] = useNodesState(initialNodes);
+  const [edges, setEdges] = useEdgesState(initialEdges);
+
+  // register flow events
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    setNodes((nds) => applyNodeChanges(changes, nds) as typeof nds);
+  }, []);
+
+  const onEdgesChange = useCallback((changes: EdgeChange[]) => {
+    setEdges((eds) => applyEdgeChanges(changes, eds));
+  }, []);
+
+  const onConnect = useCallback((params: Edge) => {
+    setEdges((eds) => addEdge(params, eds));
+  }, []);
 
   // Init editor instance
   const editorInstance = useReactFlow();
@@ -59,11 +69,6 @@ const WorkflowEditor = ({
       event.preventDefault();
     }
   };
-
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
 
   return (
     <div
