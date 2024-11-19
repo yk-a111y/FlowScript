@@ -11,10 +11,10 @@ interface BlockBasicProps {
 }
 
 const BlockBasic = (props: BlockBasicProps) => {
-  console.log('🚀 ~ BlockBasic ~ props:', props);
+  // console.log('🚀 ~ BlockBasic ~ props:', props);
   const { id, data } = props;
   const block = useEditorBlock(data.label);
-  console.log('🚀 ~ BlockBasic ~ block:', block);
+  // console.log('🚀 ~ BlockBasic ~ block:', block);
   return (
     <BlockBase>
       {data.label !== 'trigger' && (

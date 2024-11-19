@@ -1,4 +1,5 @@
 import {
+  addEdge,
   Background,
   BackgroundVariant,
   MiniMap,
@@ -10,8 +11,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { IWorkflowDrawflow } from '../type';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import BlockBasic from '@/components/block/BlockBasic';
+import CustomEdge from '@/components/common/CustomEdge';
 // import { getBlocks } from '@/utils/getSharedData';
 
 interface WorkflowEditorProps {
@@ -37,6 +39,7 @@ const WorkflowEditor = ({
 
   // fetch nodeTypes
   const nodeTypes = useMemo(() => ({ BlockBasic }), []);
+  const edgeTypes = useMemo(() => ({ 'custom-edge': CustomEdge }), []);
 
   useEffect(() => {
     applyFlowData();
@@ -57,12 +60,26 @@ const WorkflowEditor = ({
     }
   };
 
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    []
+  );
+
   return (
     <div
       className="workflow-editor focus:outline-none"
       style={{ height: 'calc(100vh - 40px)' }}
     >
-      <ReactFlow fitView nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
+      <ReactFlow
+        fitView
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+      >
         <MiniMap className="hidden md:block" />
         <Background variant={BackgroundVariant.Dots} />
       </ReactFlow>
