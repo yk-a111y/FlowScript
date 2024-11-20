@@ -17,7 +17,7 @@ const WorkflowBlockList = () => {
         return (
           <div
             key={block.id}
-            draggable="true"
+            draggable
             className="bg-input group relative cursor-move select-none rounded-lg p-4 transition"
             onDragStart={(event) =>
               event.dataTransfer.setData('block', JSON.stringify(block))

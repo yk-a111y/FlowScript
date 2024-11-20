@@ -12,6 +12,7 @@ export const tasks = {
     maxConnection: 1,
     refDataKeys: ['url'],
     data: {
+      label: 'trigger',
       disableBlock: false,
       description: '',
       type: 'manual',
@@ -72,6 +73,7 @@ export const tasks = {
       'variableName',
     ],
     data: {
+      label: 'cookie',
       disableBlock: false,
       description: '',
       type: 'get',
@@ -106,6 +108,7 @@ export const tasks = {
     allowedInputs: true,
     maxConnection: 1,
     data: {
+      label: 'javascript-code',
       disableBlock: false,
       description: '',
       timeout: 20000,
@@ -129,6 +132,7 @@ export const tasks = {
     maxConnection: 1,
     refDataKeys: ['globalData'],
     data: {
+      label: 'execute-workflow',
       disableBlock: false,
       executeId: '',
       workflowId: '',
@@ -151,6 +155,7 @@ export const tasks = {
     maxConnection: 1,
     data: {
       disableBlock: false,
+      label: 'active-tab',
     },
   },
   'new-tab': {
@@ -166,6 +171,7 @@ export const tasks = {
     maxConnection: 1,
     refDataKeys: ['url', 'userAgent'],
     data: {
+      label: 'new-tab',
       disableBlock: false,
       description: '',
       url: '',

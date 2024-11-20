@@ -19,6 +19,7 @@ import { IWorkflowDrawflow } from '../type';
 import { useCallback, useEffect, useMemo } from 'react';
 import BlockBasic from '@/components/block/BlockBasic';
 import CustomEdge from '@/components/common/CustomEdge';
+import { nanoid } from 'nanoid';
 
 interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
@@ -70,6 +71,33 @@ const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
     }
   };
 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDropInFlow = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    // transfer screen position to flow position
+    const { clientX, clientY } = event;
+    const position = editorInstance.screenToFlowPosition({
+      x: clientX,
+      y: clientY,
+    });
+    const blockData = JSON.parse(event.dataTransfer.getData('block'));
+
+    console.log('🚀 ~ handleDrop ~ position:', position);
+
+    // create new node
+    const newNode = {
+      id: nanoid(),
+      type: blockData.component,
+      data: blockData.data,
+      position,
+    };
+
+    setNodes([...nodes, newNode]);
+  };
+
   return (
     <div
       className="workflow-editor focus:outline-none"
@@ -81,9 +109,11 @@ const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
         edges={edges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
+        onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        onDragOver={handleDragOver}
+        onDrop={handleDropInFlow}
       >
         <MiniMap className="hidden md:block" />
         <Background variant={BackgroundVariant.Dots} />
