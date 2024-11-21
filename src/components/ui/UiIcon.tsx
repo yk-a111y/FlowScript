@@ -6,9 +6,11 @@ import * as MdIcons from 'react-icons/md';
 interface IconProps {
   size?: number;
   name: string;
+  className?: string;
+  rotate?: number;
 }
 
-const Icon: FC<IconProps> = ({ size = 24, name }) => {
+const Icon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
   const IconComponent =
     (RemixIcons as Record<string, FC>)[name] ||
     (FaIcons as Record<string, FC>)[name] ||
@@ -19,7 +21,10 @@ const Icon: FC<IconProps> = ({ size = 24, name }) => {
   }
 
   return (
-    <div style={{ fontSize: size }}>
+    <div
+      style={{ fontSize: size, transform: `rotate(${rotate}deg)` }}
+      className={className}
+    >
       <IconComponent />
     </div>
   );

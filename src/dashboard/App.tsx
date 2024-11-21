@@ -12,7 +12,7 @@ const DashBoardApp = () => {
   }, []);
 
   return (
-    <div className="m-4">
+    <div className="dashboard-app">
       <aside className="fixed left-0 top-0 z-50 flex h-screen w-16 flex-col items-center bg-yellow-100 py-6 dark:bg-gray-800">
         <img src={logo} className="mx-auto mb-4 w-10" />
         <div>
@@ -20,7 +20,11 @@ const DashBoardApp = () => {
         </div>
       </aside>
       <main className="pl-16">
-        <Outlet></Outlet>
+        <div className="dashboard-main flex flex-col">
+          <div className="flex-1">
+            <Outlet></Outlet>
+          </div>
+        </div>
       </main>
     </div>
   );

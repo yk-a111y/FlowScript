@@ -25,12 +25,17 @@ const WorkflowDetail = () => {
   };
 
   return (
-    <div className="flex">
+    <div
+      className="workflow-detail flex"
+      style={{ height: 'calc(100vh - 40px)' }}
+    >
       {/* 左侧Block区 */}
-      <WorkflowDetailsCard />
+      <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">
+        <WorkflowDetailsCard />
+      </div>
       {/* 编辑区 */}
       <div
-        className="flow-container"
+        className="workflow-right-flow-area"
         style={{ height: '100vh', width: '100vw' }}
       >
         <ReactFlowProvider>

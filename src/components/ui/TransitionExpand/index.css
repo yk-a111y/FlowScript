@@ -1,0 +1,21 @@
+.fade-enter {
+  opacity: 0;
+  height: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  height: auto; /* 这里可以使用具体的高度值 */
+  transition: opacity 300ms ease, height 300ms ease;
+}
+
+.fade-exit {
+  opacity: 1;
+  height: auto; /* 这里可以使用具体的高度值 */
+}
+
+.fade-exit-active {
+  opacity: 0;
+  height: 0;
+  transition: opacity 300ms ease, height 300ms ease;
+}
