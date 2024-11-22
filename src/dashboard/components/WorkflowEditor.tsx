@@ -24,9 +24,14 @@ import { nanoid } from 'nanoid';
 interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
   onInit: (instance: ReactFlowInstance) => void;
+  onEdit: (nodeData: Node) => void;
 }
 
-const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
+const WorkflowEditor = ({
+  editorData,
+  onInit,
+  onEdit,
+}: WorkflowEditorProps) => {
   // Init nodes and edges
   const { nodes: initialNodes, edges: initialEdges } = editorData;
   const [nodes, setNodes] = useNodesState(initialNodes);
@@ -98,6 +103,17 @@ const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
     setNodes([...nodes, newNode]);
   };
 
+  const onEdgeDoubleClick = (event: MouseEvent, edge: Edge) => {
+    // 删除edge
+    setEdges(edges.filter((e) => e.id !== edge.id));
+  };
+
+  const onNodeDoubleClick = (event: MouseEvent, node: Node) => {
+    // 修改node
+    console.log('🚀 ~ onNodeDoubleClick ~ node:', node);
+    onEdit(node);
+  };
+
   return (
     <div
       className="workflow-editor focus:outline-none"
@@ -111,7 +127,9 @@ const WorkflowEditor = ({ editorData, onInit }: WorkflowEditorProps) => {
         edgeTypes={edgeTypes}
         onConnect={onConnect}
         onNodesChange={onNodesChange}
+        onNodeDoubleClick={onNodeDoubleClick}
         onEdgesChange={onEdgesChange}
+        onEdgeDoubleClick={onEdgeDoubleClick}
         onDragOver={handleDragOver}
         onDrop={handleDropInFlow}
       >

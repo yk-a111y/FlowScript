@@ -23,7 +23,13 @@ const BlockBase = ({ children }: BlockBaseProps) => {
           </p>
         </div>
         <div className="block-menu inline-flex items-center dark:text-gray-300">
-          <button>
+          <button title="Delete block">
+            <UiIcon name="RiDeleteBinLine" />
+          </button>
+          <button title="Edit block">
+            <UiIcon name="RiPencilLine" />
+          </button>
+          <button title="Block settings">
             <UiIcon name="RiSettings3Line" />
           </button>
           <button title="Run workflow from here">

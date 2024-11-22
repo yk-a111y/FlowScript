@@ -1,9 +1,12 @@
-import { useMemo } from 'react';
+import defu from 'defu';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
+import { Node, ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
 import { useWorkflowStore } from '@/store/workflow';
-import WorkflowDetailsCard from './WorkflowDetailsCard';
+import { getBlocks } from '@/utils/getSharedData';
+import WorkflowDetailsCard from '../components/WorkflowDetailsCard';
 import WorkflowEditor from '../components/WorkflowEditor';
+import WorkflowEditBlock from '../components/WorkflowEditBlock';
 
 const WorkflowDetail = () => {
   // 从路由参数中获取workflowId
@@ -11,8 +14,11 @@ const WorkflowDetail = () => {
   const { getWorkflowById } = useWorkflowStore();
   const workflow = getWorkflowById(workflowId);
   // console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
+  const blocks = getBlocks();
 
-  // const [editor, setEditor] = useState<ReactFlowInstance>();
+  const [editor, setEditor] = useState<ReactFlowInstance>();
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [editing, setEditing] = useState(false);
 
   const editorData = useMemo(() => {
     return workflow.drawflow;
@@ -21,7 +27,20 @@ const WorkflowDetail = () => {
 
   const onEditorInit = (instance: ReactFlowInstance) => {
     console.log('🚀 ~ onEditorInit ~ instance:', instance);
-    // setEditor(instance);
+    setEditor(instance);
+  };
+
+  // 初始化block编辑区
+  const initEditBlock = (node: Node) => {
+    const block = blocks[node.data.label as keyof typeof blocks];
+    console.log('🚀 ~ initEditBlock ~ block:', block);
+    const { editComponent, data: blockDefData, name } = block;
+    console.log('🚀 ~ initEditBlock ~ editComponent:', editComponent);
+    const blockData = defu(node.data, blockDefData);
+    console.log('🚀 ~ initEditBlock ~ blockData:', blockData);
+
+    setShowSidebar(true);
+    setEditing(true);
   };
 
   return (
@@ -30,16 +49,22 @@ const WorkflowDetail = () => {
       style={{ height: 'calc(100vh - 40px)' }}
     >
       {/* 左侧Block区 */}
-      <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">
-        <WorkflowDetailsCard />
-      </div>
+      {showSidebar && (
+        <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">
+          {editing ? <WorkflowEditBlock /> : <WorkflowDetailsCard />}
+        </div>
+      )}
       {/* 编辑区 */}
       <div
         className="workflow-right-flow-area"
         style={{ height: '100vh', width: '100vw' }}
       >
         <ReactFlowProvider>
-          <WorkflowEditor editorData={editorData} onInit={onEditorInit} />
+          <WorkflowEditor
+            editorData={editorData}
+            onInit={onEditorInit}
+            onEdit={initEditBlock}
+          />
         </ReactFlowProvider>
       </div>
     </div>
