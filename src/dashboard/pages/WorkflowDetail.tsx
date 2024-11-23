@@ -19,6 +19,7 @@ const WorkflowDetail = () => {
   const [editor, setEditor] = useState<ReactFlowInstance>();
   const [showSidebar, setShowSidebar] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [editingBlock, setEditingBlock] = useState();
 
   const editorData = useMemo(() => {
     return workflow.drawflow;
@@ -39,8 +40,20 @@ const WorkflowDetail = () => {
     const blockData = defu(node.data, blockDefData);
     console.log('🚀 ~ initEditBlock ~ blockData:', blockData);
 
+    setEditingBlock({
+      ...blockData,
+      editComponent,
+      name,
+    });
+
+    console.log('🚀 ~ initEditBlock ~ editingBlock:', editingBlock);
+
     setShowSidebar(true);
     setEditing(true);
+  };
+
+  const closeEditingCard = () => {
+    setEditing(false);
   };
 
   return (
@@ -51,7 +64,14 @@ const WorkflowDetail = () => {
       {/* 左侧Block区 */}
       {showSidebar && (
         <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">
-          {editing ? <WorkflowEditBlock /> : <WorkflowDetailsCard />}
+          {editing ? (
+            <WorkflowEditBlock
+              editingBlock={editingBlock}
+              close={closeEditingCard}
+            />
+          ) : (
+            <WorkflowDetailsCard />
+          )}
         </div>
       )}
       {/* 编辑区 */}
