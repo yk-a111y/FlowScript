@@ -9,7 +9,7 @@ const routes: RouteObject[] = [
     element: <DashboardApp />,
     children: [
       {
-        index: true, // 父级的默认子路由
+        index: true, // default route
         element: <Workflows />,
       },
       {

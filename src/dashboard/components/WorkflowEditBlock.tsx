@@ -26,7 +26,7 @@ const WorkflowEditBlock = ({ editingBlock, close }: WorkflowEditBlockProps) => {
 
     return (
       <Suspense fallback={<div>加载中...</div>}>
-        <Component />
+        <Component compData={editingBlock} />
       </Suspense>
     );
   };
