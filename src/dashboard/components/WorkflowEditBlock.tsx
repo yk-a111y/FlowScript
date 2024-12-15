@@ -8,7 +8,6 @@ interface WorkflowEditBlockProps {
 
 const WorkflowEditBlock = ({ editingBlock, close }: WorkflowEditBlockProps) => {
   console.log('🚀 ~ WorkflowEditBlock ~ editingBlock:', editingBlock);
-
   // import edit components dynamically
   const editComponents = import.meta.glob('./edit/*.tsx');
   const components = Object.keys(editComponents).reduce((acc, key) => {

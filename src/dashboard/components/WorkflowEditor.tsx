@@ -15,11 +15,11 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { nanoid } from 'nanoid';
 import { IWorkflowDrawflow } from '../type';
 import { useCallback, useEffect, useMemo } from 'react';
 import BlockBasic from '@/components/block/BlockBasic';
 import CustomEdge from '@/components/common/CustomEdge';
-import { nanoid } from 'nanoid';
 
 interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
@@ -90,8 +90,6 @@ const WorkflowEditor = ({
     });
     const blockData = JSON.parse(event.dataTransfer.getData('block'));
 
-    console.log('🚀 ~ handleDrop ~ position:', position);
-
     // create new node
     const newNode = {
       id: nanoid(),
@@ -110,7 +108,7 @@ const WorkflowEditor = ({
 
   const onNodeDoubleClick = (event: MouseEvent, node: Node) => {
     // 修改node
-    console.log('🚀 ~ onNodeDoubleClick ~ node:', node);
+    // console.log('🚀 ~ onNodeDoubleClick ~ node:', node);
     onEdit(node);
   };
 

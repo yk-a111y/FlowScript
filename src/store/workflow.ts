@@ -5,6 +5,7 @@ import firstWorkflows from '@/utils/firstWorkflows';
 import { tasks } from '@/utils/shared';
 import { IWorkflow } from '@/dashboard/type';
 
+// *workflowStore
 interface WorkflowStoreState {
   workflows: Record<string, unknown>; // Adjust the type as needed
   loadData: () => void;
@@ -12,7 +13,6 @@ interface WorkflowStoreState {
   getWorkflowById: (id: string) => IWorkflow;
   setWorkflows: (newWorkflows: IWorkflow[]) => void;
 }
-
 export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
   workflows: {},
   loadData: () => {
@@ -122,3 +122,15 @@ const defaultWorkflows = (
 
   return workflowData;
 };
+
+// *isEditingStore
+interface IsEditingStoreState {
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
+  getIsEditing: () => boolean;
+}
+export const useIsEditingStore = create<IsEditingStoreState>((set, get) => ({
+  isEditing: false,
+  setIsEditing: (isEditing: boolean) => set({ isEditing }),
+  getIsEditing: () => get().isEditing,
+}));

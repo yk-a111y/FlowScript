@@ -5,7 +5,7 @@ interface EditNewTabProps {
 }
 
 const EditNewTab = ({ compData }: EditNewTabProps) => {
-  console.log(compData);
+  // console.log(compData);
   return (
     <div>
       <UiTextarea

@@ -4,7 +4,7 @@ import UiExpand from '@/components/ui/UiExpand';
 import UiIcon from '@/components/ui/UiIcon';
 
 const WorkflowBlockList = (props) => {
-  console.log('🚀 ~ WorkflowBlockList ~ props:', props);
+  // console.log('🚀 ~ WorkflowBlockList ~ props:', props);
   const { category, blockList } = props;
   const [showBlock, setShowBlock] = useState(false);
 
