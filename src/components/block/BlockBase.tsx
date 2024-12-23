@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback } from 'react';
+import { PropsWithChildren, useCallback, useState } from 'react';
 import { Edge, Node, useReactFlow } from '@xyflow/react';
 import { useEditingBlockStore } from '@/store/editingBlock';
 import { useIsEditingStore } from '@/store/workflow';
@@ -14,9 +14,18 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
   const { setEditingBlock } = useEditingBlockStore();
   const { setIsEditing } = useIsEditingStore();
   const { setNodes, setEdges } = useReactFlow();
+  const [isCopied, setIsCopied] = useState(false);
 
   const onDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // e.stopPropagation();
+  };
+
+  const insertToClipboard = () => {
+    navigator.clipboard.writeText(blockData?.id || '');
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 600);
   };
 
   const onDeleteBlock = useCallback(() => {
@@ -38,16 +47,18 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
   return (
     <div className="block-base relative w-48" onDoubleClick={onDoubleClick}>
       <div
-        className="block-menu-container absolute top-0 hidden w-full"
+        className="block-menu-container absolute top-0 w-full hidden"
         style={{ transform: 'translateY(-100%)' }}
       >
+        {/* insertToClipboard for Block id  */}
         <div className="pointer-events-none">
           <p
             title="Block id (click to copy)"
             className="block-menu pointer-events-auto text-overflow inline-block px-1 dark:text-gray-300"
             style={{ maxWidth: '96px', marginBottom: 0 }}
+            onClick={insertToClipboard}
           >
-            ✅ Copied
+            {isCopied ? '✅ Copied' : blockData?.id}
           </p>
         </div>
         {/* Block Menu */}

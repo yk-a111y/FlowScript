@@ -26,3 +26,13 @@
     display: none;
   }
 }
+
+/* Block Menu */
+.block-menu {
+  @apply mb-1 bg-box-transparent-2 rounded-md;
+  button {
+    padding-left: 6px;
+    padding-right: 6px;
+    @apply focus:ring-0 py-1 hover:text-primary;
+  }
+}
