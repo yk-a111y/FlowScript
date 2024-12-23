@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react';
-import { Node } from '@xyflow/react';
+import { PropsWithChildren, useCallback } from 'react';
+import { Edge, Node, useReactFlow } from '@xyflow/react';
 import { useEditingBlockStore } from '@/store/editingBlock';
 import { useIsEditingStore } from '@/store/workflow';
 import UiIcon from '../ui/UiIcon';
@@ -13,18 +13,28 @@ interface BlockBaseProps extends PropsWithChildren {
 const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
   const { setEditingBlock } = useEditingBlockStore();
   const { setIsEditing } = useIsEditingStore();
+  const { setNodes, setEdges } = useReactFlow();
 
   const onDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // e.stopPropagation();
   };
+
+  const onDeleteBlock = useCallback(() => {
+    setNodes((nodes: Node[]) => nodes.filter((node) => node.id !== id));
+    setEdges((edges: Edge[]) =>
+      edges.filter((edge) => edge.source !== id && edge.target !== id)
+    );
+  }, [id, setNodes, setEdges]);
+
   const onEditBlock = () => {
     // label -> blockData
-    console.log('edit block', id, blockData);
+    // console.log('edit block', id, blockData);
     if (blockData) {
       setEditingBlock(blockData);
       setIsEditing(true);
     }
   };
+
   return (
     <div className="block-base relative w-48" onDoubleClick={onDoubleClick}>
       <div
@@ -42,7 +52,7 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
         </div>
         {/* Block Menu */}
         <div className="block-menu inline-flex items-center dark:text-gray-300">
-          <button title="Delete block">
+          <button title="Delete block" onClick={onDeleteBlock}>
             <UiIcon name="RiDeleteBinLine" />
           </button>
           <button title="Edit block" onClick={onEditBlock}>
