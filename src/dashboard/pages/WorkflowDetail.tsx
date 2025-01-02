@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Node, ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
+import { executeWorkflow } from '@/workflowEngine';
 import { useWorkflowStore, useIsEditingStore } from '@/store/workflow';
 import { useEditingBlockStore } from '@/store/editingBlock';
 import WorkflowDetailsCard from '../components/WorkflowDetailsCard';
@@ -22,7 +23,6 @@ const WorkflowDetail = () => {
   const editorData = useMemo(() => {
     return workflow.drawflow;
   }, [workflow]);
-  console.log('🚀 ~ editorData ~ editorData:', editorData);
 
   const onEditorInit = (instance: ReactFlowInstance) => {
     console.log('🚀 ~ onEditorInit ~ instance:', instance);
@@ -52,6 +52,35 @@ const WorkflowDetail = () => {
     setIsEditing(false);
   };
 
+  const onRunWorkflow = () => {
+    console.log('run workflow');
+    executeWorkflow(workflow, {});
+  };
+
+  const onSaveWorkflow = () => {
+    console.log('save workflow');
+    try {
+      const flow = editor?.toObject();
+      flow.edges = flow.edges.map((edge) => {
+        delete edge.sourceNode;
+        delete edge.targetNode;
+
+        return edge;
+      });
+
+      // check trigger block
+      const triggerBlock = flow.nodes.find(
+        (node) => node.data.label === 'trigger'
+      );
+      if (!triggerBlock) {
+        console.error('trigger block not found');
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className="workflow-detail flex"
@@ -70,18 +99,26 @@ const WorkflowDetail = () => {
           )}
         </div>
       )}
-      {/* 编辑区 */}
-      <div
-        className="workflow-right-flow-area"
-        style={{ height: '100vh', width: '100vw' }}
-      >
-        <ReactFlowProvider>
-          <WorkflowEditor
-            editorData={editorData}
-            onInit={onEditorInit}
-            onEdit={initEditBlock}
-          />
-        </ReactFlowProvider>
+      {/* edit area */}
+      <div className="relative flex-1 overflow-auto">
+        {/* top func area */}
+        <div className="top-func absolute left-0 top-0 z-10 flex w-full items-center p-4">
+          <div onClick={onRunWorkflow}>开始</div>
+          <div onClick={onSaveWorkflow}>保存</div>
+        </div>
+        {/* editor */}
+        <div
+          className="workflow-right-flow-area"
+          style={{ height: '100vh', width: '100vw' }}
+        >
+          <ReactFlowProvider>
+            <WorkflowEditor
+              editorData={editorData}
+              onInit={onEditorInit}
+              onEdit={initEditBlock}
+            />
+          </ReactFlowProvider>
+        </div>
       </div>
     </div>
   );

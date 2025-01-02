@@ -1,10 +1,20 @@
-const startWorkflowExec = (workflowData, options) => {
-  console.log(workflowData, options);
+import { convertWorkflowData } from '../utils/convertWorkflowData';
+import { IWorkflow } from '@/dashboard/type';
+
+const startWorkflowExec = (workflowData: IWorkflow, options: any) => {
+  // clone workflow data
+  const clonedWorkflowData = {};
+  Object.keys(workflowData).forEach((key) => {
+    clonedWorkflowData[key] = workflowData[key];
+  });
+
+  // convert workflow data
+  const convertedWorkflow = convertWorkflowData(clonedWorkflowData);
+  console.log('🚀 ~ startWorkflowExec ~ convertedWorkflow:', convertedWorkflow);
 };
 
-const executeWorkflow = (workflowData, options) => {
-  console.log(workflowData, options);
-  // 开始执行工作流
+const executeWorkflow = (workflowData: IWorkflow, options: any) => {
+  if (!workflowData || workflowData.isDisabled) return;
   startWorkflowExec(workflowData, options);
 };
 

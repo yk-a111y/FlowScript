@@ -11,9 +11,9 @@ interface BlockBasicProps {
 }
 
 const BlockBasic = (props: BlockBasicProps) => {
-  console.log('🚀 ~ BlockBasic ~ props:', props);
+  // console.log('🚀 ~ BlockBasic ~ props:', props);
   const { id, data } = props;
-  // console.log('🚀 ~ BlockBasic ~ data:', data);
+  console.log('🚀 ~ BlockBasic ~ data:', data);
   const block = useEditorBlock(data.label);
   // console.log('🚀 ~ BlockBasic ~ block:', block);
   return (

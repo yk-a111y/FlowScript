@@ -44,6 +44,10 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
     }
   };
 
+  const onRunWorkflow = () => {
+    console.log('run workflow', id, blockData);
+  };
+
   return (
     <div className="block-base relative w-48" onDoubleClick={onDoubleClick}>
       <div
@@ -72,7 +76,7 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
           <button title="Block settings">
             <UiIcon name="RiSettings3Line" />
           </button>
-          <button title="Run workflow from here">
+          <button title="Run workflow from here" onClick={onRunWorkflow}>
             <UiIcon name="RiPlayLine" />
           </button>
         </div>

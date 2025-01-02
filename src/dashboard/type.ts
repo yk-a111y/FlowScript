@@ -1,6 +1,6 @@
 import type { Edge, Node } from '@xyflow/react';
 
-interface IWorkflow {
+export interface IWorkflow {
   id?: string;
   name?: string;
   description?: string;
@@ -23,7 +23,7 @@ interface IWorkflow {
   date?: number;
 }
 
-interface IWorkflowDrawflow {
+export interface IWorkflowDrawflow {
   nodes: (Node & { label: string })[];
   edges: Edge[];
   position?: number[];
@@ -53,5 +53,3 @@ interface IWorkflowTabel {
   name: string;
   type: string;
 }
-
-export type { IWorkflow, IWorkflowDrawflow };
