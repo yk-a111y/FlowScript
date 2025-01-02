@@ -18,4 +18,30 @@ const debounce = (fn, delay = 200) => {
   };
 };
 
-export { convertToObj };
+const findTriggerBlock = (drawflow = {}) => {
+  if (!drawflow) return null;
+
+  if (drawflow.drawflow) {
+    const blocks = Object.values(drawflow.drawflow?.Home?.data ?? {});
+    if (!blocks) return null;
+
+    return blocks.find(({ name }) => name === 'trigger');
+  }
+  if (drawflow.nodes) {
+    return drawflow.nodes.find((node) => node.label === 'trigger');
+  }
+
+  return null;
+}
+
+const parseJSON = (data, def) => {
+  try {
+    const result = JSON.parse(data);
+
+    return result;
+  } catch (error) {
+    return def;
+  }
+}
+
+export { convertToObj, debounce, findTriggerBlock, parseJSON };
