@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .bg-box-transparent-2 {
+    @apply bg-gray-900/20;
+  }
+}

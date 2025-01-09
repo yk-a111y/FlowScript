@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "FlowScript",
+  "description": "FlowScript is a Chrome Extension built with React",
+  "version": "1.0.0",
+  "icons": {
+    "16": "assets/img/icon.png",
+    "48": "assets/img/icon.png",
+    "128": "assets/img/icon.png"
+  },
+  "action": {
+    "default_popup": "dashboard/index.html",
+    "default_icon": {
+      "16": "assets/img/icon.png",
+      "48": "assets/img/icon.png",
+      "128": "assets/img/icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "options_page": "dashboard/index.html",
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "Open extension popup"
+    }
+  },
+  "minimum_chrome_version": "88"
+}
