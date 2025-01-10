@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:chrome": "node utils/chrome-dev.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

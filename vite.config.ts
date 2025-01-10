@@ -6,9 +6,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import react from '@vitejs/plugin-react';
 import type { PreRenderedAsset } from 'rollup';
 
-// https://vite.dev/config/
 export default defineConfig({
-  // root: process.env.VITE_ROOT || 'src/dashboard',
   root: resolve(__dirname, 'src'),
   publicDir: resolve(__dirname, './public'),
   resolve: {
@@ -20,8 +18,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
+        popup: resolve(__dirname, 'src/popup/index.html'),
         dashboard: resolve(__dirname, 'src/dashboard/index.html'),
-        sandbox: resolve(__dirname, 'src/sandbox/index.html'),
         background: resolve(__dirname, 'src/background/index.ts'),
         content: resolve(__dirname, 'src/content/index.ts'),
       },
