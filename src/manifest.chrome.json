@@ -20,7 +20,7 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["storage", "tabs", "activeTab"],
+  "permissions": ["storage", "tabs", "activeTab", "management"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "content_scripts": [
     {
