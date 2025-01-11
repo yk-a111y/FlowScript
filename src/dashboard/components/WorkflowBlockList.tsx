@@ -40,7 +40,7 @@ const WorkflowBlockList = (props) => {
                   }
                 >
                   <div className="invisible absolute right-2 top-2 flex items-center text-gray-600 group-hover:visible dark:text-gray-300">
-                    1
+                    tips
                   </div>
                   <UiIcon name={block.icon} className="mb-2"></UiIcon>
                   <p className="text-overflow capitalize leading-tight">

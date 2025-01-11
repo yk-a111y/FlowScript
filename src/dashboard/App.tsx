@@ -1,7 +1,7 @@
-import { useWorkflowStore } from '@/store/workflow';
-import logo from '@public/assets/img/icon.png';
 import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { useWorkflowStore } from '@/store/workflow';
+import logo from '@public/assets/img/icon.png';
 
 const DashBoardApp = () => {
   const { loadData } = useWorkflowStore();

@@ -1,4 +1,5 @@
 {
+  "author": "ykky",
   "manifest_version": 3,
   "name": "FlowScript",
   "description": "FlowScript is a Chrome Extension built with React",
@@ -17,20 +18,30 @@
     }
   },
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "background/index.js",
     "type": "module"
   },
-  "permissions": ["storage", "tabs", "activeTab", "management"],
+  "permissions": [
+    "tabs",
+    "proxy",
+    "alarms",
+    "storage",
+    "debugger",
+    "webNavigation",
+    "unlimitedStorage",
+    "scripting"
+  ],
   "host_permissions": ["http://*/*", "https://*/*"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["contentScript/index.js"],
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/*"],
+      "resources": ["img/*", "fonts/*"],
       "matches": ["<all_urls>"]
     }
   ],

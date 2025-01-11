@@ -1,15 +1,15 @@
-import UiTextarea from '@/components/ui/UiTextarea';
+import { Textarea } from '@/components/ui/UiTextarea';
 
 interface EditNewTabProps {
   compData: any;
 }
 
 const EditNewTab = ({ compData }: EditNewTabProps) => {
-  console.log(compData);
+  console.log('🚀 ~ EditNewTab ~ compData:', compData);
   return (
     <div>
-      <UiTextarea
-        placeholder="描述"
+      <Textarea
+        placeholder="Description"
         value={compData.description}
         onChange={(value) => {
           console.log(value);

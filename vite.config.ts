@@ -1,81 +1,61 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
+import { __DEV__, outputDir } from './const';
+// import eslintPlugin from 'vite-plugin-eslint';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-import path, { resolve } from 'path';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import react from '@vitejs/plugin-react';
-import type { PreRenderedAsset } from 'rollup';
+import hotReloadBackground from './scripts/HMR/background';
 
-export default defineConfig({
-  root: resolve(__dirname, 'src'),
-  publicDir: resolve(__dirname, './public'),
+export const r = (...args: string[]) => resolve(__dirname, '.', ...args);
+
+export const commonConfig = {
+  root: r('src'),
+  define: {
+    __DEV__,
+  },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@public': path.resolve(__dirname, './public'),
+      '@': `${r('src')}/`,
+      '@public': `${r('public')}/`,
     },
   },
+  plugins: [react()],
+  // ignore .DS_Store
+  server: {
+    host: 'localhost',
+    watch: {
+      ignored: ['**/.DS_Store'],
+    },
+  },
+};
+
+export default defineConfig({
+  ...commonConfig,
   build: {
+    watch: __DEV__ ? {} : null,
+    cssCodeSplit: false,
+    emptyOutDir: false,
+    sourcemap: false,
+    outDir: r(outputDir),
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, 'src/popup/index.html'),
-        dashboard: resolve(__dirname, 'src/dashboard/index.html'),
-        background: resolve(__dirname, 'src/background/index.ts'),
-        content: resolve(__dirname, 'src/content/index.ts'),
+        background: r('src/background/index.ts'),
+        popup: r('src/popup/index.html'),
+        dashboard: r('src/dashboard/index.html'),
       },
       output: {
-        // JS 文件平铺到根目录
-        entryFileNames: '[name].js',
-        // 代码分割的 chunk 也平铺到根目录
-        chunkFileNames: '[name]-[hash].js',
-        // 只有静态资源保持在 assets 目录结构
-        assetFileNames: (assetInfo: PreRenderedAsset) => {
-          // 如果是图片或字体等静态资源，放入 assets 目录
-          if (
-            /\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|eot|ttf|otf)$/i.test(
-              assetInfo.name || ''
-            )
-          ) {
-            if (
-              /\.(jpg|jpeg|png|gif|svg|webp|ico)$/i.test(assetInfo?.name || '')
-            ) {
-              return `assets/images/[name][extname]`;
-            }
-            if (/\.(woff|woff2|eot|ttf|otf)$/i.test(assetInfo?.name || '')) {
-              return `assets/fonts/[name][extname]`;
-            }
-            return `assets/[ext]/[name][extname]`;
-          }
-          // CSS 和其他文件都平铺到根目录
-          return '[name][extname]';
-        },
+        assetFileNames: '[name].[ext]',
+        entryFileNames: '[name]/index.js',
+        extend: true,
+        format: 'es',
       },
     },
-    outDir: resolve(__dirname, 'dist'),
-    emptyOutDir: true,
-    copyPublicDir: true,
   },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],
     },
   },
-  plugins: [
-    react(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: resolve(__dirname, 'src/manifest.chrome.json'),
-          dest: '',
-          rename: 'manifest.json',
-        },
-      ],
-    }),
-  ],
-  // 添加 .DS_Store 到忽略列表
-  server: {
-    watch: {
-      ignored: ['**/.DS_Store'],
-    },
-  },
+  plugins: [...commonConfig.plugins, hotReloadBackground()],
 });

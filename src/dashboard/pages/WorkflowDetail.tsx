@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import browser from 'webextension-polyfill';
 import { Node, ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
 import { executeWorkflow } from '@/workflowEngine';
 import { useWorkflowStore, useIsEditingStore } from '@/store/workflow';
@@ -7,12 +8,13 @@ import { useEditingBlockStore } from '@/store/editingBlock';
 import WorkflowDetailsCard from '../components/WorkflowDetailsCard';
 import WorkflowEditor from '../components/WorkflowEditor';
 import WorkflowEditBlock from '../components/WorkflowEditBlock';
+import type { IWorkflowDrawflow } from '../type';
 
 const WorkflowDetail = () => {
   // 从路由参数中获取workflowId
   const { id: workflowId = '' } = useParams<{ id: string }>();
   const { isEditing, setIsEditing } = useIsEditingStore();
-  const { getWorkflowById } = useWorkflowStore();
+  const { getWorkflowById, updateWorkflow } = useWorkflowStore();
   const workflow = getWorkflowById(workflowId);
   console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
 
@@ -57,35 +59,44 @@ const WorkflowDetail = () => {
     executeWorkflow(workflow, {});
   };
 
-  const onSaveWorkflow = () => {
-    console.log('save workflow');
+  const onSaveWorkflow = async () => {
     try {
       const flow = editor?.toObject();
-      flow.edges = flow.edges.map((edge) => {
-        delete edge.sourceNode;
-        delete edge.targetNode;
+      console.log('🚀 ~ onSaveWorkflow ~ flow:', flow);
+      // flow.edges = flow?.edges.map((edge) => {
+      //   delete edge?.sourceNode;
+      //   delete edge?.targetNode;
 
-        return edge;
-      });
+      //   return edge;
+      // });
 
       // check trigger block
-      const triggerBlock = flow.nodes.find(
+      const triggerBlock = flow?.nodes.find(
         (node) => node.data.label === 'trigger'
       );
       if (!triggerBlock) {
         console.error('trigger block not found');
         return;
       }
+
+      await updateWorkflow(
+        workflowId,
+        {
+          drawflow: flow,
+          trigger: triggerBlock.data,
+          version: browser.runtime.getManifest().version,
+        },
+        false
+      );
+      // await registerWorkflowTrigger(props.workflow.id, triggerBlock);
+      // emit('change', { drawflow: flow });
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div
-      className="workflow-detail flex"
-      style={{ height: 'calc(100vh - 40px)' }}
-    >
+    <div className="workflow-detail flex">
       {/* 左侧Block区 */}
       {showSidebar && (
         <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">

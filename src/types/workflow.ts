@@ -1,35 +1,24 @@
 interface IWorkflow {
-  extVersion: string;
-  name: string;
-  icon: string;
-  table: TableColumn[];
-  version: string;
-  drawflow: Drawflow;
-  settings: Settings;
-  globalData: string;
-  description: string;
-  includedWorkflows: Record<string, unknown>;
-}
-
-interface TableColumn {
   id: string;
   name: string;
-  type: string;
+  drawflow: Drawflow;
+  description?: string;
+  icon?: string;
+  extVersion?: string;
+  version?: string;
+  globalData?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  settings?: Settings;
+  table?: TableColumn[];
 }
 
 interface Drawflow {
-  edges: Edge[];
   nodes: Node[];
+  edges: Edge[];
   position: [number, number];
-  viewport: Viewport;
   zoom: number;
-}
-
-interface Edge {
-  id: string;
-  source: string;
-  target: string;
-  type: string;
+  viewport: Viewport;
 }
 
 interface Node {
@@ -46,6 +35,13 @@ interface NodeData {
   url?: string;
 }
 
+interface Edge {
+  id: string;
+  source: string;
+  target: string;
+  type: string;
+}
+
 interface Viewport {
   x: number;
   y: number;
@@ -56,6 +52,12 @@ interface Settings {
   blockDelay: number;
   debugMode: boolean;
   onError: string;
+}
+
+interface TableColumn {
+  id: string;
+  name: string;
+  type: string;
 }
 
 export default IWorkflow;

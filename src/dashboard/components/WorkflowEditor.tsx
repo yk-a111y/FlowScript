@@ -89,6 +89,7 @@ const WorkflowEditor = ({
       y: clientY,
     });
     const blockData = JSON.parse(event.dataTransfer.getData('block'));
+    console.log('🚀 ~ handleDropInFlow ~ blockData:', blockData);
 
     // create new node
     const newNode = {

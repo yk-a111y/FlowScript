@@ -1,18 +1,22 @@
-interface UiTextareaProps {
-  value?: string;
-  placeholder?: string;
-  onChange?: (value: string) => void;
-}
+import * as React from 'react';
 
-const UiTextarea = ({ placeholder, value, onChange }: UiTextareaProps) => {
+import { cn } from '@/lib/utils';
+
+const Textarea = React.forwardRef<
+  HTMLTextAreaElement,
+  React.ComponentProps<'textarea'>
+>(({ className, ...props }, ref) => {
   return (
     <textarea
-      className="ui-textarea ui-input bg-input w-full rounded-lg px-4 py-2 transition"
-      value={value}
-      placeholder={placeholder}
-      onChange={(e) => onChange?.(e.target.value)}
-    ></textarea>
+      className={cn(
+        'ui-textarea ui-input bg-input w-full rounded-lg px-4 py-2 transition',
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
   );
-};
+});
+Textarea.displayName = 'Textarea';
 
-export default UiTextarea;
+export { Textarea };
