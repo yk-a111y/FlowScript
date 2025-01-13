@@ -8,7 +8,7 @@ import type { PreRenderedAsset } from 'rollup';
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
-  publicDir: resolve(__dirname, './public'),
+  publicDir: resolve(__dirname, './public/assets'),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -72,8 +72,9 @@ export default defineConfig({
       ],
     }),
   ],
-  // 添加 .DS_Store 到忽略列表
+  // ignore .DS_Store
   server: {
+    host: 'localhost',
     watch: {
       ignored: ['**/.DS_Store'],
     },
