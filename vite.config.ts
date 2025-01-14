@@ -54,6 +54,7 @@ export default defineConfig({
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,
     copyPublicDir: true,
+    sourcemap: true,
   },
   css: {
     postcss: {

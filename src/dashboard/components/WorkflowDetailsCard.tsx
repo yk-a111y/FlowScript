@@ -8,7 +8,6 @@ const WorkflowDetailsCard = () => {
   delete copyBlocks['block-package'];
   console.log('🚀 ~ WorkflowDetailsCard ~ copyBlocks:', copyBlocks);
   const blocksArr = Object.entries(copyBlocks).map(([key, block]) => {
-    // const localeKey = `workflow.blocks.${key}.name`;
     return {
       ...block,
       id: key,

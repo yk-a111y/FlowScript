@@ -96,10 +96,7 @@ const WorkflowDetail = () => {
   };
 
   return (
-    <div
-      className="workflow-detail flex"
-      style={{ height: 'calc(100vh - 40px)' }}
-    >
+    <div className="workflow-detail flex">
       {/* 左侧Block区 */}
       {showSidebar && (
         <div className="workflow-left-block-area hidden md:flex w-80 flex-col border-l border-gray-100 bg-white py-6 dark:border-gray-700 dark:border-opacity-50 dark:bg-gray-800">

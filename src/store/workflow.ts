@@ -41,7 +41,7 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
     let localWorkflows = workflows || {};
 
     // get default workflow at first time
-    if (isFirstFromStorage === undefined || isFirstFromStorage) {
+    if (isFirstFromStorage === undefined || !isFirstFromStorage) {
       localWorkflows = firstWorkflows.map((workflow) => {
         return defaultWorkflows(workflow as IWorkflow);
       });
