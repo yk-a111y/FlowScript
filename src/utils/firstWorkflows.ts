@@ -275,7 +275,7 @@ export default [
           data: {
             label: 'new-tab',
             disableBlock: false,
-            description: '',
+            description: 'New Tab',
             url: 'https://google.com',
             userAgent: '',
             active: true,

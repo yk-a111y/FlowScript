@@ -9,7 +9,7 @@ const EditNewTab = ({ compData }: EditNewTabProps) => {
   return (
     <div>
       <Textarea
-        placeholder="Tell us a little bit about yourself"
+        placeholder="Description"
         value={compData.description}
         onChange={(value) => {
           console.log(value);
