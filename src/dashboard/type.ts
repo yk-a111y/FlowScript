@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@xyflow/react';
+import type { BuiltInNode, Edge } from '@xyflow/react';
 
 export interface IWorkflow {
   id?: string;
@@ -24,7 +24,7 @@ export interface IWorkflow {
 }
 
 export interface IWorkflowDrawflow {
-  nodes: (Node & { label: string })[];
+  nodes: BuiltInNode[];
   edges: Edge[];
   position?: number[];
   viewport?: Record<string, number>;

@@ -16,7 +16,7 @@ const DashBoardApp = () => {
       <aside className="fixed left-0 top-0 z-50 flex h-screen w-16 flex-col items-center bg-yellow-100 py-6 dark:bg-gray-800">
         <img src={logo} className="mx-auto mb-4 w-10" />
         <div>
-          <Link to={'/'}>workflow</Link>
+          <Link to={'/'}>workflows</Link>
         </div>
       </aside>
       <main className="pl-16">

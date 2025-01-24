@@ -17,6 +17,10 @@
   transform: translateY(30px);
 }
 
+#workflow-edit-block {
+  @apply dark:border-gray-700 dark:border-opacity-40 my-4;
+}
+
 .workflows-container {
   @apply grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4;
 }

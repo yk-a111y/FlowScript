@@ -95,6 +95,34 @@ const WorkflowDetail = () => {
     }
   };
 
+  const updateBlockData = (key: string, value: string) => {
+    const { id } = editingBlock;
+    console.log('🚀 ~ updateBlockData ~ id:', id);
+    const node = editor?.getNode(id);
+    console.log('🚀 ~ updateBlockData ~ node:', node);
+    if (node) {
+      // 2. 获取所有节点
+      const allNodes = editor?.getNodes() || [];
+
+      // 3. 更新指定节点的属性，保持其他节点不变
+      const updatedNodes = allNodes.map((n) => {
+        if (n.id === id) {
+          return {
+            ...n,
+            data: {
+              ...n.data,
+              [key]: value,
+            },
+          };
+        }
+        return n;
+      });
+
+      // 4. 更新所有节点
+      editor?.setNodes(updatedNodes);
+    }
+  };
+
   return (
     <div className="workflow-detail flex">
       {/* 左侧Block区 */}
@@ -104,6 +132,7 @@ const WorkflowDetail = () => {
             <WorkflowEditBlock
               editingBlock={editingBlock}
               close={closeEditingCard}
+              updateBlockData={updateBlockData}
             />
           ) : (
             <WorkflowDetailsCard />

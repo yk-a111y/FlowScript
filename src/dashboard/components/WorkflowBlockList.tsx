@@ -6,7 +6,7 @@ import UiIcon from '@/components/ui/UiIcon';
 const WorkflowBlockList = (props) => {
   // console.log('🚀 ~ WorkflowBlockList ~ props:', props);
   const { category, blockList } = props;
-  const [showBlock, setShowBlock] = useState(false);
+  const [showBlock, setShowBlock] = useState(true);
 
   const blockListHeader = () => {
     return (

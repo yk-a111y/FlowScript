@@ -4,9 +4,14 @@ import { lazy, Suspense } from 'react';
 interface WorkflowEditBlockProps {
   editingBlock: any;
   close: () => void;
+  updateBlockData: (data: any) => void;
 }
 
-const WorkflowEditBlock = ({ editingBlock, close }: WorkflowEditBlockProps) => {
+const WorkflowEditBlock = ({
+  editingBlock,
+  close,
+  updateBlockData,
+}: WorkflowEditBlockProps) => {
   console.log('🚀 ~ WorkflowEditBlock ~ editingBlock:', editingBlock);
   // import edit components dynamically
   const editComponents = import.meta.glob('./edit/*.tsx');
@@ -17,6 +22,7 @@ const WorkflowEditBlock = ({ editingBlock, close }: WorkflowEditBlockProps) => {
   }, {});
 
   const getEditComp = () => {
+    console.log('🚀 ~ getEditComp ~ editingBlock:', editingBlock);
     const editComp = editingBlock.editComponent;
     if (typeof editComp === 'object') {
       return editComp;
@@ -24,8 +30,8 @@ const WorkflowEditBlock = ({ editingBlock, close }: WorkflowEditBlockProps) => {
     const Component = lazy(components[editComp]);
 
     return (
-      <Suspense fallback={<div>加载中...</div>}>
-        <Component compData={editingBlock} />
+      <Suspense>
+        <Component compData={editingBlock} updateBlockData={updateBlockData} />
       </Suspense>
     );
   };

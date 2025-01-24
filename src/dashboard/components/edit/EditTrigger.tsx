@@ -1,19 +1,22 @@
+import { useState } from 'react';
 import { Textarea } from '@/components/ui/UiTextarea';
 import { Button } from '@/components/ui/UiButton';
 import Icon from '@/components/ui/UiIcon';
 interface EditTriggerProps {
   compData: any;
+  updateBlockData: (key: string, value: string) => void;
 }
 
-const EditTrigger = ({ compData }: EditTriggerProps) => {
-  console.log('🚀 ~ EditTrigger ~ compData:', compData);
+const EditTrigger = ({ compData, updateBlockData }: EditTriggerProps) => {
+  const [description, setDescription] = useState(compData.data.description);
   return (
     <div className="edit-trigger">
       <Textarea
         placeholder="Description"
-        value={compData.description}
+        value={description}
         onChange={(e) => {
-          console.log(e.target.value);
+          setDescription(e.target.value);
+          updateBlockData('description', e.target.value);
         }}
       />
       <Button variant="accent" className="mt-4 w-full">
