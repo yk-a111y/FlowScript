@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/lodash.merge": "^4.6.9",
