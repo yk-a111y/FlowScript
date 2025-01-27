@@ -35,7 +35,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript/index.js"],
+      "js": ["content/index.js"],
       "run_at": "document_end"
     }
   ],

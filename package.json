@@ -8,7 +8,7 @@
     "dev:code": "vite build",
     "dev:content": "vite build --config vite.content.config.ts",
     "dev:copy": "node scripts/watch-chrome.js",
-    "test": "cross-env CRX_ENV=production pnpm clear && vite build && vite build --config vite.content.config.ts && node scripts/watch-chrome.js",
+    "test": "node scripts/test.js",
     "build": "vite build",
     "preview": "vite preview"
   },

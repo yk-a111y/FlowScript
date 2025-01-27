@@ -2,10 +2,10 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
 import { __DEV__, outputDir } from './const';
-// import eslintPlugin from 'vite-plugin-eslint';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 import hotReloadBackground from './scripts/HMR/background';
+// import eslintPlugin from 'vite-plugin-eslint';
 
 export const r = (...args: string[]) => resolve(__dirname, '.', ...args);
 
