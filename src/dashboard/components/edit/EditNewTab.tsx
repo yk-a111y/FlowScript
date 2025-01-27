@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Textarea } from '@/components/ui/UiTextarea';
-import { Label } from '@/components/ui/UiLabel';
-import { Input } from '@/components/ui/UiInput';
+import UiTextarea from '@/components/ui/UiTextarea';
+import UiLabel from '@/components/ui/UiLabel';
+import UiInput from '@/components/ui/UiInput';
 interface EditNewTabProps {
   compData: any;
   updateBlockData: (key: string, value: string) => void;
@@ -12,7 +12,7 @@ const EditNewTab = ({ compData, updateBlockData }: EditNewTabProps) => {
   const [newTabUrl, setNewTabUrl] = useState(compData.data.url);
   return (
     <div>
-      <Textarea
+      <UiTextarea
         placeholder="Description"
         value={description}
         onChange={(e) => {
@@ -20,8 +20,8 @@ const EditNewTab = ({ compData, updateBlockData }: EditNewTabProps) => {
           updateBlockData('description', e.target.value);
         }}
       />
-      <Label>New Tab URL</Label>
-      <Input
+      <UiLabel>New Tab URL</UiLabel>
+      <UiInput
         value={newTabUrl}
         placeholder="https://www.test.com"
         onChange={(e) => {

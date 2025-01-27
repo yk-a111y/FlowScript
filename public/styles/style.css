@@ -40,3 +40,12 @@
     @apply focus:ring-0 py-1 hover:text-primary;
   }
 }
+
+.ui-select__arrow {
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+.ui-select option,
+.ui-select optgroup {
+  @apply bg-gray-100 dark:bg-gray-700;
+}

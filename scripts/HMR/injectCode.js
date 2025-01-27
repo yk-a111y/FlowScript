@@ -6,7 +6,7 @@ const hotReloadClientInit = () => {
     if (e.data === 'UPDATE_BG') {
       bgWs.close()
       setTimeout(() => {
-        // chrome.runtime.reload()
+        chrome.runtime.reload()
       }, 500)
     } else if (e.data === 'UPDATE_CONTENT_SCRIPT') {
       reloadContent()

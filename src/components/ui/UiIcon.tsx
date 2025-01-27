@@ -10,7 +10,7 @@ interface IconProps {
   rotate?: number;
 }
 
-const Icon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
+const UiIcon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
   const IconComponent =
     (RemixIcons as Record<string, FC>)[name] ||
     (FaIcons as Record<string, FC>)[name] ||
@@ -30,4 +30,4 @@ const Icon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
   );
 };
 
-export default Icon;
+export default UiIcon;

@@ -36,7 +36,7 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
       'workflows',
       'isFirstFromStorage',
     ]);
-    // console.log('🚀 ~ loadData: ~ workflows:', workflows, isFirstFromStorage);
+    console.log('🚀 ~ loadData: ~ workflows:', workflows, isFirstFromStorage);
 
     let localWorkflows = workflows || {};
 

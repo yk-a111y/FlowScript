@@ -1,63 +1,55 @@
-interface IWorkflow {
-  id: string;
-  name: string;
-  drawflow: Drawflow;
+import type { BuiltInNode, Edge } from '@xyflow/react';
+
+export interface IWorkflow {
+  id?: string;
+  name?: string;
   description?: string;
   icon?: string;
+  isDisabled?: boolean;
   extVersion?: string;
   version?: string;
+  updatedAt?: number;
+  createdAt?: number;
   globalData?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  settings?: Settings;
-  table?: TableColumn[];
+  drawflow: IWorkflowDrawflow;
+  table?: IWorkflowTabel[];
+  settings?: IWorkflowSettings;
+  content?: string | null;
+  connectedTable?: string | null;
+  trigger?: string | null;
+  dataColumns?: string[];
+  folderId?: string | null;
+  includedWorkflows?: Record<string, unknown>;
+  date?: number;
 }
 
-interface Drawflow {
-  nodes: Node[];
+export interface IWorkflowDrawflow {
+  nodes: BuiltInNode[];
   edges: Edge[];
-  position: [number, number];
-  zoom: number;
-  viewport: Viewport;
-}
-
-interface Node {
-  id: string;
-  label: string;
-  type: string;
-  data: NodeData;
-}
-
-interface NodeData {
-  description: string;
-  disableBlock: boolean;
-  code?: string;
-  url?: string;
-}
-
-interface Edge {
-  id: string;
-  source: string;
-  target: string;
-  type: string;
-}
-
-interface Viewport {
-  x: number;
-  y: number;
+  position?: number[];
+  viewport?: Record<string, number>;
   zoom: number;
 }
 
-interface Settings {
+interface IWorkflowSettings {
   blockDelay: number;
   debugMode: boolean;
+  defaultColumnName: string;
+  execContext: string;
+  executedBlockOnWeb: boolean;
+  inputAutocomplete: boolean;
+  insertDefaultColumn: boolean;
+  notification: boolean;
   onError: string;
+  publicId: string;
+  restartTimes: number;
+  reuseLastState: boolean;
+  saveLog: boolean;
+  tabLoadTimeout?: number;
 }
 
-interface TableColumn {
+interface IWorkflowTabel {
   id: string;
   name: string;
   type: string;
 }
-
-export default IWorkflow;

@@ -26,7 +26,7 @@ class BackgroundUtils {
         }
       } else {
         const curWin = await browser.windows.getCurrent();
-        console.log('🚀 ~ BackgroundUtils ~ openDashboard ~ curWin:', curWin);
+        // console.log('🚀 ~ BackgroundUtils ~ openDashboard ~ curWin:', curWin);
         const windowOptions = {
           top: 0,
           left: 0,

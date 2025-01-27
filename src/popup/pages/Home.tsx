@@ -1,14 +1,21 @@
 import { useEffect } from 'react';
 import BackgroundUtils from '@/background/backgroundUtils';
+import { useWorkflowStore } from '@/store/workflow';
+import UiInput from '@/components/ui/UiInput';
+import UiSelect from '@/components/ui/UiSelect';
+import PopupWorkflow from '../components/PopupWorkflow';
+import { IWorkflow } from '@/types/workflow';
 
 const PopupHome = () => {
-  const toDashboard = () => {
-    BackgroundUtils.openDashboard('');
-  };
+  const { getWorkflows, loadData } = useWorkflowStore();
 
   useEffect(() => {
-    console.log('useEffect');
+    loadData();
   }, []);
+
+  const executeWorkflow = async (workflow: IWorkflow) => {
+    console.log('🚀 ~ executeWorkflow ~ workflow:', workflow);
+  };
 
   return (
     <>
@@ -20,10 +27,37 @@ const PopupHome = () => {
           <h1 className="text-xl font-semibold text-white">FlowScript</h1>
           <div className="grow"></div>
           {/* Function */}
-          <button className="text-white" onClick={toDashboard}>
+          <button
+            className="text-white"
+            onClick={() => BackgroundUtils.openDashboard('')}
+          >
             Go Dashboard
           </button>
         </div>
+        <div className="flex">
+          <UiInput
+            className="search-input w-full"
+            placeholder="Search"
+            prependIcon="RiSearchLine"
+            autoComplete="off"
+          />
+        </div>
+      </div>
+      {/* Query */}
+      <div className="p-2 rounded-lg bg-white">
+        <UiSelect className="flex-1">
+          <option value="">Folder (all)</option>
+        </UiSelect>
+      </div>
+      {/* Workflow List */}
+      <div className="workflows-list">
+        {getWorkflows().map((workflow) => (
+          <PopupWorkflow
+            key={workflow.id}
+            workflow={workflow}
+            onExecute={() => executeWorkflow(workflow)}
+          />
+        ))}
       </div>
     </>
   );
