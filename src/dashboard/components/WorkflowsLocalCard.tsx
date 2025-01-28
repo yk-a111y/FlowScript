@@ -5,9 +5,13 @@ import { IWorkflow } from '../type';
 
 interface WorkflowsLocalCardProps {
   workflow: IWorkflow;
+  onExecute: () => void;
 }
 
-const WorkflowsLocalCard = ({ workflow }: WorkflowsLocalCardProps) => {
+const WorkflowsLocalCard = ({
+  workflow,
+  onExecute,
+}: WorkflowsLocalCardProps) => {
   const navigate = useNavigate();
   return (
     <div className="local-workflow cursor-default select-none ring-accent">
@@ -23,6 +27,7 @@ const WorkflowsLocalCard = ({ workflow }: WorkflowsLocalCardProps) => {
           <button
             v-if="!workflow.isDisabled"
             className="invisible group-hover:visible"
+            onClick={onExecute}
           >
             <UiIcon name="RiPlayLine" />
           </button>

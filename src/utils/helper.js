@@ -44,4 +44,8 @@ const parseJSON = (data, def) => {
   }
 }
 
-export { convertToObj, debounce, findTriggerBlock, parseJSON };
+const objectHasKey = (obj, key) => {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+};
+
+export { convertToObj, debounce, findTriggerBlock, parseJSON, objectHasKey };

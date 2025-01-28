@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill';
+
 const hotReloadClientInit = () => {
   const bgWs = new WebSocket(`ws://127.0.0.1:${UP_PORT}`)
 
@@ -6,7 +8,7 @@ const hotReloadClientInit = () => {
     if (e.data === 'UPDATE_BG') {
       bgWs.close()
       setTimeout(() => {
-        chrome.runtime.reload()
+        // browser.runtime.reload()
       }, 500)
     } else if (e.data === 'UPDATE_CONTENT_SCRIPT') {
       reloadContent()
@@ -32,7 +34,7 @@ const hotReloadClientInit = () => {
     }
   })
 
-  // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //   if (request.message === 'reload_background_from_content' && !isAlive) {
   //     hotReloadClientInit()
   //   }
@@ -40,13 +42,13 @@ const hotReloadClientInit = () => {
   // })
 
   const reloadContent = () => {
-    chrome.tabs.query({}, async (tabs) => {
+    browser.tabs.query({}, async (tabs) => {
       const currentTab = tabs.find((tab) => tab.active)
       if (!currentTab || currentTab.url.indexOf('chrome') === 0) {
         return
       }
       const tabId = currentTab.id
-      await chrome.scripting.executeScript({
+      await browser.scripting.executeScript({
         target: { tabId },
         files: ['./contentScript/index.js']
       })
