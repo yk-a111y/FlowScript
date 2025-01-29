@@ -3,6 +3,25 @@ import { IWorkflow } from '@/dashboard/type';
 import { sendMessage } from '@/utils/message';
 import { convertWorkflowData } from '@/utils/convertWorkflowData';
 import WorkflowEngine from './WorkflowEngine';
+import WorkflowState from './WorkflowState';
+import blocksHandler from './blocksHandler';
+
+const workflowStateStorage = {
+  get() {
+    return browser.storage.local
+      .get('workflowStates')
+      .then(({ workflowStates }) => workflowStates || []);
+  },
+  set(key, value) {
+    const states = Object.values(value);
+
+    return browser.storage.local.set({ workflowStates: states });
+  },
+};
+
+export const workflowState = new WorkflowState({
+  storage: workflowStateStorage,
+});
 
 const startWorkflowExec = (workflowData: IWorkflow, options: any) => {
   console.log('🚀 ~ startWorkflowExec ~ options:', options);
@@ -19,6 +38,8 @@ const startWorkflowExec = (workflowData: IWorkflow, options: any) => {
   // init workflow engine
   const engine = new WorkflowEngine(convertedWorkflow, {
     options,
+    states: workflowState,
+    blocksHandler: blocksHandler(),
   });
 
   engine.init();

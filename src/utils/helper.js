@@ -44,8 +44,16 @@ const parseJSON = (data, def) => {
   }
 }
 
+const isObject = (obj) => {
+  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
+}
+
 const objectHasKey = (obj, key) => {
   return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
-export { convertToObj, debounce, findTriggerBlock, parseJSON, objectHasKey };
+const toCamelCase = (str) => {
+  return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
+};
+
+export { convertToObj, debounce, findTriggerBlock, parseJSON, objectHasKey, isObject, toCamelCase };
