@@ -24,7 +24,6 @@ export const workflowState = new WorkflowState({
 });
 
 const startWorkflowExec = (workflowData: IWorkflow, options: any) => {
-  console.log('🚀 ~ startWorkflowExec ~ options:', options);
   // clone workflow data
   const clonedWorkflowData: IWorkflow = {};
   Object.keys(workflowData).forEach((key) => {
@@ -33,7 +32,6 @@ const startWorkflowExec = (workflowData: IWorkflow, options: any) => {
 
   // convert workflow data
   const convertedWorkflow = convertWorkflowData(clonedWorkflowData);
-  console.log('🚀 ~ startWorkflowExec ~ convertedWorkflow:', convertedWorkflow);
 
   // init workflow engine
   const engine = new WorkflowEngine(convertedWorkflow, {

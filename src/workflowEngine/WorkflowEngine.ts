@@ -3,24 +3,32 @@ import browser from 'webextension-polyfill';
 import { IWorkflow } from '@/dashboard/type';
 import { getBlocks } from '@/utils/getSharedData';
 import { parseJSON, isObject } from '@/utils/helper';
+import WorkflowWorker from './WorkflowWorker';
 
+const blocks = getBlocks();
 class WorkflowEngine {
   private id: string;
   private states;
-  private options;
+  public options;
   private isMV2: boolean;
 
-  private workflow: IWorkflow;
-  private blocks;
-  private blocksHandler;
+  public workflow: IWorkflow;
+  private workerId: number;
+  private workers: Map<string, WorkflowWorker>;
+  public blocks;
+  public blocksHandler;
 
   private triggerBlockId: string;
-  private connectionsMap;
+  public connectionsMap;
   private rowData;
   private columns;
   private columnsId;
 
-  private referenceData;
+  public isDestroyed: boolean;
+  private isUsingProxy: boolean;
+  private isInBreakpoint: boolean;
+
+  public referenceData;
 
   private logsLimit: number;
   private startedTimestamp: number;
@@ -31,6 +39,8 @@ class WorkflowEngine {
     this.isMV2 = browser.runtime.getManifest().manifest_version === 2;
 
     this.workflow = workflow;
+    this.workerId = 0;
+    this.workers = new Map();
     this.blocks = {};
     this.blocksHandler = blocksHandler;
 
@@ -39,6 +49,10 @@ class WorkflowEngine {
     this.rowData = {};
     this.columns = {};
     this.columnsId = {};
+
+    this.isDestroyed = false;
+    this.isUsingProxy = false;
+    this.isInBreakpoint = false;
 
     let { globalData } = workflow;
     let variables = {};
@@ -166,9 +180,19 @@ class WorkflowEngine {
 
       // this.states.on('stop', this.onWorkflowStopped);
       // this.states.on('resume', this.onResumeExecution);
+      this.addWorker({ blockId: triggerBlock.id });
     } catch (error) {
       console.log(error);
     }
+  }
+
+  addWorker(detail) {
+    this.workerId += 1;
+    const workerId = `worker-${this.workerId}`;
+    const worker = new WorkflowWorker(workerId, this, { blocksDetail: blocks });
+    worker.init(detail);
+
+    this.workers.set(worker.id, worker);
   }
 }
 
