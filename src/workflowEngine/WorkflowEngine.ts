@@ -79,6 +79,15 @@ class WorkflowEngine {
     this.logsLimit = 1001;
   }
 
+  addWorker(detail) {
+    this.workerId += 1;
+    const workerId = `worker-${this.workerId}`;
+    const worker = new WorkflowWorker(workerId, this, { blocksDetail: blocks });
+    worker.init(detail);
+
+    this.workers.set(worker.id, worker);
+  }
+
   async init() {
     try {
       console.log('🚀 ~ WorkflowEngine ~ init ~ this.workflow:', this.workflow);
@@ -186,13 +195,52 @@ class WorkflowEngine {
     }
   }
 
-  addWorker(detail) {
-    this.workerId += 1;
-    const workerId = `worker-${this.workerId}`;
-    const worker = new WorkflowWorker(workerId, this, { blocksDetail: blocks });
-    worker.init(detail);
+  async destroyWorker(workerId: string) {
+    console.log('🚀 ~ WorkflowEngine ~ destroyWorker');
+    // is last worker
+    if (this.workers.size === 1 && this.workers.has(workerId)) {
+      // this.addLogHistory({
+      //   type: 'finish',
+      //   name: 'finish',
+      // });
+      // this.dispatchEvent('finish');
+      await this.destroy('success');
+    }
 
-    this.workers.set(worker.id, worker);
+    this.workers.delete(workerId);
+  }
+
+  async destroy(status: string, message?, blockDetail?) {
+    const cleanUp = () => {
+      this.id = null;
+      this.states = null;
+      this.logger = null;
+      this.saveLog = null;
+      this.workflow = null;
+      this.blocksHandler = null;
+      this.parentWorkflow = null;
+
+      this.isDestroyed = true;
+      this.referenceData = null;
+      this.eventListeners = null;
+      this.packagesCache = null;
+      this.extractedGroup = null;
+      this.connectionsMap = null;
+      this.waitConnections = null;
+      this.blocks = null;
+      this.history = null;
+      this.columnsId = null;
+      this.historyCtxData = null;
+      this.preloadScripts = null;
+    };
+
+    try {
+      if (this.isDestroyed) return;
+
+      cleanUp();
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 

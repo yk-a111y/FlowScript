@@ -1,9 +1,10 @@
-const modules = import.meta.glob('../content/blocksHandler/*.ts');
+import { toCamelCase } from '@/utils/helper';
+
+const modules = import.meta.glob('./blocksHandler/*.ts', { eager: true });
 
 const handlers = Object.keys(modules).reduce((acc, key) => {
-  const name = key.replace('../content/blocksHandler/', '').replace('.ts', '');
-  const handler = name.replace('handle', '').replace('Event', '').toLowerCase();
-  acc[handler] = modules[key];
+  const name = key.replace(/^\.\/blocksHandler\/handler|Event\.ts$|\.ts$/g, '');
+  acc[toCamelCase(name)] = modules[key].default;
 
   return acc;
 }, {});

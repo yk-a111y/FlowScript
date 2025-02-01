@@ -52,8 +52,16 @@ const objectHasKey = (obj, key) => {
   return Object.prototype.hasOwnProperty.call(obj, key);
 };
 
-const toCamelCase = (str) => {
-  return str.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
-};
+const toCamelCase = (str, lowercase = true) => {
+  const result = str.replace(/^[A-Z]/, letter =>
+    lowercase ? letter.toLowerCase() : letter
+  );
+
+  return result
+    .replace(/[A-Z]/g, letter =>
+      `-${lowercase ? letter.toLowerCase() : letter}`
+    )
+    .replace(/^-/, '');
+}
 
 export { convertToObj, debounce, findTriggerBlock, parseJSON, objectHasKey, isObject, toCamelCase };

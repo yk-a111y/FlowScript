@@ -1,5 +1,29 @@
 import WorkflowEngine from './WorkflowEngine';
 
+function blockExecutionWrapper(blockHandler, blockData) {
+  console.log('🚀 ~ blockExecutionWrapper ~ blockHandler:', blockHandler);
+  return new Promise((resolve, reject) => {
+    let timeout = null;
+    const timeoutMs = blockData?.settings?.blockTimeout;
+    if (timeoutMs && timeoutMs > 0) {
+      timeout = setTimeout(() => {
+        reject(new Error('Timeout'));
+      }, timeoutMs);
+    }
+
+    blockHandler()
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+      .finally(() => {
+        if (timeout) clearTimeout(timeout);
+      });
+  });
+}
+
 class WorkflowWorker {
   public id: string;
   private engine: WorkflowEngine;
@@ -33,7 +57,6 @@ class WorkflowWorker {
 
   init({ blockId, execParam, state }) {
     const block = this.engine.blocks[blockId];
-    console.log('🚀 ~ WorkflowWorker ~ init ~ block:', block);
     this.executeBlock(block, execParam);
   }
 
@@ -54,11 +77,43 @@ class WorkflowWorker {
     nextBlockBreakpointCount = null
   ) {
     console.log('🚀 ~ WorkflowWorker ~ prevBlockData:', prevBlockData);
-    connections.forEach((connection) => {
+    connections.forEach((connection, index) => {
       console.log(
         '🚀 ~ WorkflowWorker ~ connections.forEach ~ connection:',
         connection
       );
+      const { id, targetHandle, sourceHandle } =
+        typeof connection === 'string'
+          ? { id: connection, targetHandle: '', sourceHandle: '' }
+          : connection;
+
+      const execParam = {
+        prevBlockData,
+        targetHandle,
+        sourceHandle,
+        nextBlockBreakpointCount,
+      };
+      if (index === 0) {
+        this.executeBlock(this.engine.blocks[id], {
+          prevBlockData,
+          ...execParam,
+        });
+      } else {
+        // const state = cloneDeep({
+        //   windowId: this.windowId,
+        //   loopList: this.loopList,
+        //   activeTab: this.activeTab,
+        //   currentBlock: this.currentBlock,
+        //   repeatedTasks: this.repeatedTasks,
+        //   preloadScripts: this.preloadScripts,
+        //   debugAttached: this.debugAttached,
+        // });
+
+        this.engine.addWorker({
+          execParam,
+          blockId: id,
+        });
+      }
     });
   }
 
@@ -78,7 +133,7 @@ class WorkflowWorker {
 
     if (!handler) {
       console.error(`${block.label} doesn't have handler`);
-      // this.engine.destroy('stopped');
+      this.engine.destroy('stopped');
       return;
     }
 
@@ -88,15 +143,15 @@ class WorkflowWorker {
       ...this.engine.referenceData,
       activeTabUrl: this.activeTab.url,
     };
-    const replacedBlock = await templating({
-      block,
-      data: refData,
-      isPopup: this.engine.isPopup,
-      refKeys:
-        isRetry || block.data.disableBlock
-          ? null
-          : this.blocksDetail[block.label].refDataKeys,
-    });
+    // const replacedBlock = await templating({
+    //   block,
+    //   data: refData,
+    //   isPopup: this.engine.isPopup,
+    //   refKeys:
+    //     isRetry || block.data.disableBlock
+    //       ? null
+    //       : this.blocksDetail[block.label].refDataKeys,
+    // });
     const blockDelay = this.settings?.blockDelay || 0;
 
     const executeBlocks = (blocks, data) => {
@@ -116,13 +171,19 @@ class WorkflowWorker {
           nextBlockId: this.getBlockConnections(block.id),
         };
       } else {
-        const bindedHandler = handler.bind(this, replacedBlock, {
+        const bindedHandler = handler.bind(this, block, {
           refData,
           prevBlock,
           ...(execParam || {}),
         });
         result = await blockExecutionWrapper(bindedHandler, block.data);
+        console.log('🚀 ~ WorkflowWorker ~ executeBlock ~ result:', result);
+
         // if (this.engine.isDestroyed) return;
+
+        // if (result.replacedValue) {
+        //   replacedBlock.replacedValue = result.replacedValue;
+        // }
       }
 
       if (result.nextBlockId && !result.destroyWorker) {
@@ -134,7 +195,7 @@ class WorkflowWorker {
           executeBlocks(result.nextBlockId, result.data);
         }
       } else {
-        // this.engine.destroyWorker(this.id);
+        this.engine.destroyWorker(this.id);
       }
     } catch (error) {
       console.error(error);
