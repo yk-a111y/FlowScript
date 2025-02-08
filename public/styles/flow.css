@@ -1,3 +1,14 @@
+.react-flow {
+  &.disabled {
+    .react-flow__handle {
+      pointer-events: none;
+    }
+  }
+  svg g.connected-edges path {
+    stroke: theme('colors.primary');
+  }
+}
+
 .react-flow__minimap {
   @apply rounded-lg dark:bg-gray-800;
 }
@@ -29,17 +40,6 @@
       border-width: 3px;
       @apply border-accent -mr-4 bg-white dark:bg-black;
     }
-  }
-}
-
-.react-flow {
-  &.disabled {
-    .react-flow__handle {
-      pointer-events: none;
-    }
-  }
-  svg g.connected-edges path {
-    stroke: theme('colors.primary');
   }
 }
 

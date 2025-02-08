@@ -276,7 +276,7 @@ export default [
             label: 'new-tab',
             disableBlock: false,
             description: 'New Tab',
-            url: 'https://google.com',
+            url: 'https://www.google.com/',
             userAgent: '',
             active: true,
             inGroup: false,

@@ -1,7 +1,8 @@
+import browser from 'webextension-polyfill';
 import WorkflowEngine from './WorkflowEngine';
+import { waitTabLoaded } from './helper';
 
 function blockExecutionWrapper(blockHandler, blockData) {
-  console.log('🚀 ~ blockExecutionWrapper ~ blockHandler:', blockHandler);
   return new Promise((resolve, reject) => {
     let timeout = null;
     const timeoutMs = blockData?.settings?.blockTimeout;
@@ -11,6 +12,7 @@ function blockExecutionWrapper(blockHandler, blockData) {
       }, timeoutMs);
     }
 
+    // execute specific handler
     blockHandler()
       .then((result) => {
         resolve(result);
@@ -30,6 +32,8 @@ class WorkflowWorker {
   private settings: any;
   private blocksDetail: any;
 
+  private loopEls: any[];
+  private frameSelector: string;
   private windowId: string | null;
   private currentBlock: any;
   private childWorkflowId: string | null;
@@ -42,6 +46,8 @@ class WorkflowWorker {
     this.settings = engine.workflow.settings;
     this.blocksDetail = options.blocksDetail || {};
 
+    this.loopEls = [];
+    this.frameSelector = '';
     this.windowId = null;
     this.currentBlock = null;
     this.childWorkflowId = null;
@@ -76,7 +82,6 @@ class WorkflowWorker {
     prevBlockData,
     nextBlockBreakpointCount = null
   ) {
-    console.log('🚀 ~ WorkflowWorker ~ prevBlockData:', prevBlockData);
     connections.forEach((connection, index) => {
       console.log(
         '🚀 ~ WorkflowWorker ~ connections.forEach ~ connection:',
@@ -118,18 +123,15 @@ class WorkflowWorker {
   }
 
   async executeBlock(block, execParam = {}, isRetry: boolean = false) {
-    console.log('🚀 ~ WorkflowWorker ~ executeBlock ~ block:', block);
-
     const startExecuteTime = Date.now();
     const prevBlock = this.currentBlock;
     this.currentBlock = { ...block, startedAt: startExecuteTime };
 
     const blockHandler = this.engine.blocksHandler[block.label];
 
-    const handler =
-      !blockHandler && this.blocksDetail[block.label].category === 'interaction'
-        ? this.engine.blocksHandler.interactionBlock
-        : blockHandler;
+    const handler = !blockHandler
+      ? this.engine.blocksHandler.interaction
+      : blockHandler;
 
     if (!handler) {
       console.error(`${block.label} doesn't have handler`);
@@ -177,7 +179,6 @@ class WorkflowWorker {
           ...(execParam || {}),
         });
         result = await blockExecutionWrapper(bindedHandler, block.data);
-        console.log('🚀 ~ WorkflowWorker ~ executeBlock ~ result:', result);
 
         // if (this.engine.isDestroyed) return;
 
@@ -197,6 +198,46 @@ class WorkflowWorker {
       } else {
         this.engine.destroyWorker(this.id);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async _sendMessageToTab(payload, options = {}, runBeforeLoad = false) {
+    try {
+      if (!this.activeTab.id) {
+        const error = new Error('no-tab');
+        error.workflowId = this.id;
+
+        throw error;
+      }
+
+      if (!runBeforeLoad) {
+        await waitTabLoaded({
+          tabId: this.activeTab.id,
+          ms: this.settings?.tabLoadTimeout ?? 30000,
+        });
+      }
+
+      const { executedBlockOnWeb, debugMode } = this.settings;
+      const messagePayload = {
+        isBlock: true,
+        debugMode,
+        executedBlockOnWeb,
+        loopEls: this.loopEls,
+        activeTabId: this.activeTab.id,
+        frameSelector: this.frameSelector,
+        ...payload,
+      };
+
+      const data = await browser.tabs.sendMessage(
+        this.activeTab.id,
+        messagePayload,
+        { frameId: this.activeTab.frameId, ...options }
+      );
+      console.log('🚀 ~ WorkflowWorker ~ _sendMessageToTab ~ data:', data);
+
+      return data;
     } catch (error) {
       console.error(error);
     }
