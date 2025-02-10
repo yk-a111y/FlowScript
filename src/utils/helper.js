@@ -5,6 +5,14 @@ const convertToObj = (array) =>
     return acc;
   }, {});
 
+const sleep = (ms = 500) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+};
+
 const debounce = (fn, delay = 200) => {
   let interval;
   return (...args) => {
@@ -48,6 +56,12 @@ const isObject = (obj) => {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 }
 
+const isXPath = (str) => {
+  const regex = /^([(/@]|id\()/;
+
+  return regex.test(str);
+}
+
 const objectHasKey = (obj, key) => {
   return Object.prototype.hasOwnProperty.call(obj, key);
 };
@@ -64,4 +78,14 @@ const toCamelCase = (str, lowercase = true) => {
     .replace(/^-/, '');
 }
 
-export { convertToObj, debounce, findTriggerBlock, parseJSON, objectHasKey, isObject, toCamelCase };
+export {
+  convertToObj,
+  sleep,
+  debounce,
+  findTriggerBlock,
+  parseJSON,
+  objectHasKey,
+  isObject,
+  toCamelCase,
+  isXPath,
+};

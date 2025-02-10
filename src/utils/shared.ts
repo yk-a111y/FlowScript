@@ -332,3 +332,27 @@ export const categories = {
     color: 'bg-cyan-200 dark:bg-cyan-300 fill-cyan-200 dark:fill-cyan-300',
   },
 };
+
+export const eventList = [
+  { id: 'click', name: 'Click', type: 'mouse-event' },
+  { id: 'dblclick', name: 'Double Click', type: 'mouse-event' },
+  { id: 'mouseup', name: 'Mouseup', type: 'mouse-event' },
+  { id: 'mousedown', name: 'Mousedown', type: 'mouse-event' },
+  { id: 'mouseenter', name: 'Mouseenter', type: 'mouse-event' },
+  { id: 'mouseleave', name: 'Mouseleave', type: 'mouse-event' },
+  { id: 'mouseover', name: 'Mouseover', type: 'mouse-event' },
+  { id: 'mouseout', name: 'Mouseout', type: 'mouse-event' },
+  { id: 'mousemove', name: 'Mousemove', type: 'mouse-event' },
+  { id: 'focus', name: 'Focus', type: 'focus-event' },
+  { id: 'blur', name: 'Blur', type: 'focus-event' },
+  { id: 'input', name: 'Input', type: 'input-event' },
+  { id: 'change', name: 'Change', type: 'event' },
+  { id: 'touchstart', name: 'Touch start', type: 'touch-event' },
+  { id: 'touchend', name: 'Touch end', type: 'touch-event' },
+  { id: 'touchmove', name: 'Touch move', type: 'touch-event' },
+  { id: 'touchcancel', name: 'Touch cancel', type: 'touch-event' },
+  { id: 'keydown', name: 'Keydown', type: 'keyboard-event' },
+  { id: 'keyup', name: 'Keyup', type: 'keyboard-event' },
+  { id: 'submit', name: 'Submit', type: 'submit-event' },
+  { id: 'wheel', name: 'Wheel', type: 'wheel-event' },
+];
