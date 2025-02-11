@@ -324,7 +324,7 @@ export default [
             multiple: false,
             selected: true,
             type: 'text-field',
-            value: 'Automa Extension',
+            value: 'FlowScript',
             delay: '120',
             events: [],
           },

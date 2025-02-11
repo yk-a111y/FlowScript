@@ -8,7 +8,7 @@ const WorkflowsLocal = () => {
   console.log('🚀 ~ WorkflowsLocal ~ workflows:', workflows);
 
   return (
-    <div className="workflows-container">
+    <div className="workflows-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {workflows.map((workflow) => (
         <WorkflowsLocalCard
           key={workflow.id}

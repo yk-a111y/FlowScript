@@ -1,6 +1,7 @@
 import { sleep } from '@/utils/helper';
 import simulateEvent from '@/utils/simulateEvent';
 import { keyDefinitions } from '@/utils/USKeyboardLayout';
+
 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
   window.HTMLInputElement.prototype,
   'value'
@@ -84,9 +85,9 @@ const inputText = async ({ data, element, isEditable = false }) => {
     element[elementKey] += data.value;
 
     formEvent(element, {
-      isEditable,
       type: 'text-field',
       value: data.value[0] ?? '',
+      isEditable,
     });
   }
 

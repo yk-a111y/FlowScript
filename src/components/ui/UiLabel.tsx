@@ -19,6 +19,7 @@ const UiLabel = React.forwardRef<
     {...props}
   />
 ));
+
 UiLabel.displayName = LabelPrimitive.Root.displayName;
 
 export default UiLabel;

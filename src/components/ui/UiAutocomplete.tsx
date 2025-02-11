@@ -1,5 +1,17 @@
+import UiPopover from './UiPopover';
+
 const UiAutocomplete = () => {
-  return <div>UiAutocomplete</div>;
+  return (
+    <UiPopover
+      trigger="manual"
+      triggerWidth
+      renderTrigger={() => <div>123</div>}
+    >
+      <div>
+        <input type="text" />
+      </div>
+    </UiPopover>
+  );
 };
 
 export default UiAutocomplete;

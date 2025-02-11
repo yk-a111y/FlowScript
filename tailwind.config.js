@@ -43,7 +43,10 @@ export default {
   theme: {
     borderRadius: rem2px(defaultTheme.borderRadius),
     columns: rem2px(defaultTheme.columns),
-    fontSize: rem2px(defaultTheme.fontSize),
+    fontSize: {
+      ...rem2px(defaultTheme.fontSize),
+      sm: ['16px', '24px'],
+    },
     lineHeight: rem2px(defaultTheme.lineHeight),
     maxWidth: ({ theme, breakpoints }) => ({
       ...rem2px(defaultTheme.maxWidth({ theme, breakpoints })),

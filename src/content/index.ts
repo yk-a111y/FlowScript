@@ -6,15 +6,15 @@ import blocksHandler from './blocksHandler';
 async function executeBlock(data) {
   const removeExecutedBlock = showExecutedBlock(data, data.executedBlockOnWeb);
 
+  // Get Interaction Handler
   const handlers = blocksHandler();
   console.log('🚀 ~ executeBlock ~ handlers:', handlers);
-  console.log('🚀 ~ executeBlock ~ data.name:', data.name);
-  console.log('🚀 ~ executeBlock ~ data.label:', data.label);
   const handler = handlers[data.name || data.label];
   console.log('🚀 ~ executeBlock ~ handler:', handler);
 
   if (handler) {
     const result = await handler(data, { handleSelector });
+    // Remove DOM related to executed block
     removeExecutedBlock();
     return result;
   }

@@ -5,6 +5,7 @@ interface UiExpandProps extends PropsWithChildren {
   header: React.ReactNode;
   headerClass: string;
   handleToggle: () => void;
+  hideHeaderIcon?: boolean;
   show: boolean;
 }
 

@@ -41,11 +41,28 @@
   }
 }
 
-.ui-select__arrow {
-  top: 50%;
-  transform: translateY(-50%) rotate(90deg);
+.checkbox-ui__input:checked ~ .checkbox-ui__mark .ui-icon,
+.checkbox-ui__input.indeterminate ~ .checkbox-ui__mark .ui-icon {
+  transform: scale(1) !important;
 }
-.ui-select option,
-.ui-select optgroup {
-  @apply bg-gray-100 dark:bg-gray-700;
+.checkbox-ui .ui-icon {
+  transform: scale(0);
+}
+.checkbox-ui__input:checked ~ .checkbox-ui__mark,
+.checkbox-ui__input.indeterminate ~ .checkbox-ui__mark {
+  @apply bg-accent border-accent bg-opacity-100;
+}
+.checkbox-ui__mark {
+  width: 100%;
+  height: 100%;
+  transition-property: background-color, border-color;
+  transition-timing-function: ease;
+  transition-duration: 200ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.checkbox-ui__mark .ui-icon {
+  transform: scale(0) !important;
+  transition: transform 200ms ease;
 }
