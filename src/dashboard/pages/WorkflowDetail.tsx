@@ -55,7 +55,6 @@ const WorkflowDetail = () => {
   };
 
   const onRunWorkflow = () => {
-    console.log('run workflow');
     executeWorkflow(workflow, {});
   };
 
@@ -95,27 +94,25 @@ const WorkflowDetail = () => {
     }
   };
 
-  const updateBlockData = (key: string, value: string) => {
+  const updateBlockData = (value: any) => {
     const { id } = editingBlock;
-    console.log('🚀 ~ updateBlockData ~ id:', id);
     const node = editor?.getNode(id);
-    console.log('🚀 ~ updateBlockData ~ node:', node);
     if (node) {
       // 2. 获取所有节点
       const allNodes = editor?.getNodes() || [];
 
       // 3. 更新指定节点的属性，保持其他节点不变
-      const updatedNodes = allNodes.map((n) => {
-        if (n.id === id) {
+      const updatedNodes = allNodes.map((node) => {
+        if (node.id === id) {
           return {
-            ...n,
+            ...node,
             data: {
-              ...n.data,
-              [key]: value,
+              ...node.data,
+              ...value,
             },
           };
         }
-        return n;
+        return node;
       });
 
       // 4. 更新所有节点

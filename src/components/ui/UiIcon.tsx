@@ -2,7 +2,7 @@ import { FC } from 'react';
 import * as RemixIcons from 'react-icons/ri';
 import * as FaIcons from 'react-icons/fa';
 import * as MdIcons from 'react-icons/md';
-
+import { cn } from '@/lib/utils';
 interface IconProps {
   size?: number;
   name: string;
@@ -23,7 +23,7 @@ const UiIcon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
   return (
     <div
       style={{ fontSize: size, transform: `rotate(${rotate}deg)` }}
-      className={className}
+      className={cn('ui-icon', className)}
     >
       <IconComponent />
     </div>

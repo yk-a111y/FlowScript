@@ -14,8 +14,13 @@ const WorkflowsLocalCard = ({
 }: WorkflowsLocalCardProps) => {
   const navigate = useNavigate();
   return (
-    <div className="local-workflow cursor-default select-none ring-accent">
-      <UiCard className="group flex flex-col hover:ring-2 hover:ring-accent dark:hover:ring-gray-200">
+    <UiCard className="group relative min-h-40 py-4 px-6 rounded-lg border border-gray-200 bg-white hover:shadow-lg hover:border-black transition-all duration-300 cursor-pointer">
+      <div
+        className="flex flex-col gap-3"
+        onClick={() => {
+          navigate(`/workflow/${workflow.id}`);
+        }}
+      >
         <div className="mb-4 flex items-center">
           <span className="bg-box-transparent rounded-lg p-2">
             {workflow.icon ? (
@@ -27,16 +32,16 @@ const WorkflowsLocalCard = ({
           <button
             v-if="!workflow.isDisabled"
             className="invisible group-hover:visible"
-            onClick={onExecute}
+            onClick={(e) => {
+              e.stopPropagation();
+              onExecute();
+            }}
           >
             <UiIcon name="RiPlayLine" />
           </button>
         </div>
         {/* workflow info */}
-        <div
-          className="workflow-info flex-1 cursor-pointer"
-          onClick={() => navigate(`/workflow/${workflow.id}`)}
-        >
+        <div className="workflow-info flex-1 cursor-pointer">
           <p className="line-clamp font-semibold leading-tight">
             {workflow.name}
           </p>
@@ -49,8 +54,8 @@ const WorkflowsLocalCard = ({
         <div className="flex items-center text-gray-600 dark:text-gray-200">
           <p className="flex-1">{workflow.date}</p>
         </div>
-      </UiCard>
-    </div>
+      </div>
+    </UiCard>
   );
 };
 

@@ -31,12 +31,13 @@ const getEventObj = (eventName, options) => {
 };
 
 const simulateEvent = (element, eventName, options) => {
-  const event = getEventObj(eventName, options);
+  // Use native methods as these events have special browser behaviors
   const useNativeMethods = ['focus', 'submit', 'blur'];
 
   if (useNativeMethods.includes(eventName) && element[eventName]) {
     element[eventName]();
   } else {
+    const event = getEventObj(eventName, options);
     element.dispatchEvent(event);
   }
 };

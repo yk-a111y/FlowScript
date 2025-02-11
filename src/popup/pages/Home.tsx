@@ -2,7 +2,13 @@ import { useEffect } from 'react';
 import BackgroundUtils from '@/background/backgroundUtils';
 import { useWorkflowStore } from '@/store/workflow';
 import UiInput from '@/components/ui/UiInput';
-import UiSelect from '@/components/ui/UiSelect';
+import UiSelect, {
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/UiSelect';
 import PopupWorkflow from '../components/PopupWorkflow';
 import { IWorkflow } from '@/types/workflow';
 
@@ -45,8 +51,15 @@ const PopupHome = () => {
       </div>
       {/* Query */}
       <div className="p-2 rounded-lg bg-white">
-        <UiSelect className="flex-1">
-          <option value="">Folder (all)</option>
+        <UiSelect>
+          <SelectTrigger className="flex-1">
+            <SelectValue placeholder="Folder (all)" />
+          </SelectTrigger>
+          <SelectGroup>
+            <SelectContent>
+              <SelectLabel className="text-gray-500">Folder (all)</SelectLabel>
+            </SelectContent>
+          </SelectGroup>
         </UiSelect>
       </div>
       {/* Workflow List */}

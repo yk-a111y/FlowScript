@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import router from '@/router/dashboard.tsx';
+import router from '@/router/dashboard';
 import '@public/styles/tailwind.css';
 import '@public/styles/fonts.css';
 import '@public/styles/flow.css';
