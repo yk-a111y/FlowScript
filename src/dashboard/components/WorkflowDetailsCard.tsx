@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 const WorkflowDetailsCard = () => {
   const copyBlocks = getBlocks();
   delete copyBlocks['block-package'];
-  console.log('🚀 ~ WorkflowDetailsCard ~ copyBlocks:', copyBlocks);
+
   const blocksArr = Object.entries(copyBlocks).map(([key, block]) => {
     return {
       ...block,
@@ -14,7 +14,7 @@ const WorkflowDetailsCard = () => {
       name: block.name,
     };
   });
-  console.log('🚀 ~ blocksArr ~ blocksArr:', blocksArr);
+
   const blocks = useMemo(() => {
     return blocksArr.reduce((arr, block) => {
       (arr[block.category] = arr[block.category] || []).push(block);

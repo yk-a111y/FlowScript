@@ -123,6 +123,7 @@ class WorkflowWorker {
   }
 
   async executeBlock(block, execParam = {}, isRetry: boolean = false) {
+    console.log('🚀 ~ WorkflowWorker ~ executeBlock ~ block:', block);
     const startExecuteTime = Date.now();
     const prevBlock = this.currentBlock;
     this.currentBlock = { ...block, startedAt: startExecuteTime };
