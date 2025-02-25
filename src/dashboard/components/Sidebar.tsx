@@ -9,7 +9,7 @@ const tabs = [
   { id: 'home', icon: 'RiFlowChart', path: '/' },
   { id: 'packages', icon: 'RiFolderAddLine', path: '/packages' },
   { id: 'schedule', icon: 'RiTimeLine' },
-  { id: 'store', icon: 'RiHardDrive2Line' },
+  { id: 'store', icon: 'RiHardDrive3Line' },
   { id: 'log', icon: 'RiHistoryLine' },
   { id: 'settings', icon: 'RiSettings3Line' },
 ];

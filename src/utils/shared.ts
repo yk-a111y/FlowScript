@@ -79,7 +79,7 @@ const BrowserBlocks = {
   cookie: {
     name: 'Cookie',
     description: 'Get, set, or remove cookies',
-    icon: 'MdOutlineCookie',
+    icon: 'RiGameLine',
     editComponent: 'EditCookie',
     component: 'BlockBasic',
     category: 'browser',
