@@ -93,7 +93,7 @@ const EditInteractionBase: React.FC<EditInteractionBaseProps> = ({
                     <SelectValue placeholder={findBy} />
                   </SelectTrigger>
                   <SelectGroup>
-                    <SelectContent>
+                    <SelectContent className="font-serif bg-white dark:bg-gray-900">
                       <SelectLabel className="text-gray-500">
                         Find Element By
                       </SelectLabel>

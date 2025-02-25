@@ -46,19 +46,20 @@
 .react-flow__edge {
   cursor: pointer;
   &.selected .react-flow__edge-path {
-    stroke: theme('colors.green.300');
+    stroke: theme('colors.green.300') !important;
   }
-}
 
-.dark .react-flow__edge-path:hover {
-  stroke: theme('colors.yellow.400');
-}
-.react-flow__edge-path {
-  stroke: theme('colors.accent');
-  stroke-width: 4;
-  transition: stroke 100ms ease;
-  &:hover {
-    stroke: theme('colors.yellow.500');
+  .dark .react-flow__edge-path:hover {
+    stroke: theme('colors.yellow.400') !important;
+  }
+
+  .react-flow__edge-path {
+    stroke: theme('colors.accent');
+    stroke-width: 4;
+    transition: stroke 100ms ease;
+    &:hover {
+      stroke: theme('colors.yellow.500');
+    }
   }
 }
 

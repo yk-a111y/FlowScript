@@ -6,7 +6,7 @@ import { __DEV__, outputDir } from './const';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 import hotReloadBackground from './scripts/HMR/background';
-
+import { visualizer } from 'rollup-plugin-visualizer';
 export const r = (...args: string[]) => resolve(__dirname, '.', ...args);
 
 export const commonConfig = {
@@ -20,7 +20,7 @@ export const commonConfig = {
       '@public': `${r('public')}/`,
     },
   },
-  plugins: [react()],
+  plugins: [react(), visualizer()],
   // ignore .DS_Store
   server: {
     host: 'localhost',
@@ -35,7 +35,7 @@ export default defineConfig({
   build: {
     watch: __DEV__ ? {} : null,
     cssCodeSplit: false,
-    emptyOutDir: false,
+    emptyOutDir: true,
     sourcemap: true,
     outDir: r(outputDir),
     rollupOptions: {

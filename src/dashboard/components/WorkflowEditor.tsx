@@ -55,7 +55,7 @@ const WorkflowEditor = ({
 
   // fetch nodeTypes
   const nodeTypes = useMemo(() => ({ BlockBasic }), []);
-  const edgeTypes = useMemo(() => ({ 'custom-edge': CustomEdge }), []);
+  const edgeTypes = useMemo(() => ({ default: CustomEdge }), []);
 
   useEffect(() => {
     applyFlowData();
@@ -89,15 +89,16 @@ const WorkflowEditor = ({
       y: clientY,
     });
     const blockData = JSON.parse(event.dataTransfer.getData('block'));
+    blockData.id = nanoid();
     console.log('🚀 ~ handleDropInFlow ~ blockData:', blockData);
 
     // create new node
     const newNode = {
-      id: nanoid(),
       type: blockData.component,
-      data: blockData.data,
       position,
+      ...blockData,
     };
+    console.log('🚀 ~ handleDropInFlow ~ newNode:', newNode);
 
     setNodes([...nodes, newNode]);
   };
@@ -116,7 +117,7 @@ const WorkflowEditor = ({
   return (
     <div
       className="workflow-editor focus:outline-none"
-      style={{ height: 'calc(100vh - 40px)' }}
+      style={{ height: '100vh' }}
     >
       <ReactFlow
         fitView

@@ -5,10 +5,10 @@ import { Node, ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
 import { executeWorkflow } from '@/workflowEngine';
 import { useWorkflowStore, useIsEditingStore } from '@/store/workflow';
 import { useEditingBlockStore } from '@/store/editingBlock';
+import { debounce } from '@/utils/helper';
 import WorkflowDetailsCard from '../components/WorkflowDetailsCard';
 import WorkflowEditor from '../components/WorkflowEditor';
 import WorkflowEditBlock from '../components/WorkflowEditBlock';
-import type { IWorkflowDrawflow } from '../type';
 
 const WorkflowDetail = () => {
   // 从路由参数中获取workflowId
@@ -94,31 +94,27 @@ const WorkflowDetail = () => {
     }
   };
 
-  const updateBlockData = (value: any) => {
+  const updateBlockData = debounce((value: any, isData = false) => {
     const { id } = editingBlock;
     const node = editor?.getNode(id);
     if (node) {
-      // 2. 获取所有节点
-      const allNodes = editor?.getNodes() || [];
-
-      // 3. 更新指定节点的属性，保持其他节点不变
-      const updatedNodes = allNodes.map((node) => {
-        if (node.id === id) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              ...value,
-            },
-          };
-        }
-        return node;
-      });
-
-      // 4. 更新所有节点
-      editor?.setNodes(updatedNodes);
+      editor.setNodes((nodes: Node[]) =>
+        nodes.map((node) =>
+          node.id === id
+            ? isData
+              ? { ...node, ...value }
+              : {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    ...value,
+                  },
+                }
+            : node
+        )
+      );
     }
-  };
+  }, 200);
 
   return (
     <div className="workflow-detail flex">

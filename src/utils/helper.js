@@ -78,6 +78,22 @@ const toCamelCase = (str, lowercase = true) => {
     .replace(/^-/, '');
 }
 
+const deepMerge = (target, obj) => {
+  if (typeof target !== 'object' || target === null) {
+    return target;
+  }
+
+  const res = { ...target };
+
+  Object.keys(obj).forEach((key) => {
+    if (objectHasKey(obj, key)) {
+      res[key] = deepMerge(target[key], obj[key]);
+    }
+  });
+
+  return res;
+}
+
 export {
   convertToObj,
   sleep,
@@ -88,4 +104,5 @@ export {
   isObject,
   toCamelCase,
   isXPath,
+  deepMerge,
 };

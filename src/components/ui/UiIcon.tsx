@@ -1,33 +1,36 @@
-import { FC } from 'react';
-import * as RemixIcons from 'react-icons/ri';
-import * as FaIcons from 'react-icons/fa';
-import * as MdIcons from 'react-icons/md';
-import { cn } from '@/lib/utils';
-interface IconProps {
-  size?: number;
-  name: string;
-  className?: string;
-  rotate?: number;
-}
+import React from 'react';
+import 'remixicon/fonts/remixicon.css';
 
-const UiIcon: FC<IconProps> = ({ size = 24, name, className, rotate }) => {
-  const IconComponent =
-    (RemixIcons as Record<string, FC>)[name] ||
-    (FaIcons as Record<string, FC>)[name] ||
-    (MdIcons as Record<string, FC>)[name];
+const camelToKebab = (str: string): string => {
+  // extract prefix (Ri, Fa, Md, etc.)
+  const prefix = str.substring(0, 2).toLowerCase();
 
-  if (!IconComponent) {
-    return null;
-  }
+  // remove prefix
+  const remaining = str.substring(2);
+
+  const kebabCase = remaining
+    .replace(/([A-Z])/g, '-$1')
+    .replace(/(\d+)/g, '-$1-') // add dash before and after numbers
+    .toLowerCase()
+    .replace(/-+/g, '-') // replace multiple dashes with single dash
+    .replace(/^-/, '') // remove leading dash
+    .replace(/-$/, ''); // remove trailing dash
+
+  return `${prefix}-${kebabCase}`;
+};
+
+function UiIcon({ name, size = 24, className = '' }) {
+  // RiFlowChart => ri-flow-chart
+  // RiHardDrive3Line => ri-hard-drive-3-line
+  const iconClass = camelToKebab(name);
+
+  const sizeStyle = size
+    ? { fontSize: typeof size === 'number' ? `${size}px` : size }
+    : {};
 
   return (
-    <div
-      style={{ fontSize: size, transform: `rotate(${rotate}deg)` }}
-      className={cn('ui-icon', className)}
-    >
-      <IconComponent />
-    </div>
+    <i className={`ui-icon ${iconClass} ${className}`} style={sizeStyle} />
   );
-};
+}
 
 export default UiIcon;

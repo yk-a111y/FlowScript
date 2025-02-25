@@ -22,7 +22,7 @@ const WorkflowEditBlock = ({
   }, {});
 
   const getEditComp = () => {
-    console.log('🚀 ~ getEditComp ~ editingBlock:', editingBlock);
+    // console.log('🚀 ~ getEditComp ~ editingBlock:', editingBlock);
     const editComp = editingBlock.editComponent;
     if (typeof editComp === 'object') {
       return editComp;

@@ -42,9 +42,9 @@ const Workflows = () => {
               className="bg-accent h-[2.875rem] px-4 py-2 flex-1 rounded-l-none text-white hover:bg-gray-700"
               hasIcon
             >
-              <UiIcon name="RiArrowLeftSLine" rotate={-90} />
+              <UiIcon name="RiArrowDownSLine" />
             </SelectTrigger>
-            <SelectContent className="p-4 font-serif">
+            <SelectContent className="p-4 font-serif bg-white dark:bg-gray-900">
               {functions.map((func) => {
                 return (
                   <SelectItem showIndicator={false} value={func.value}>

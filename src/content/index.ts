@@ -10,12 +10,11 @@ async function executeBlock(data) {
   const handlers = blocksHandler();
   console.log('🚀 ~ executeBlock ~ handlers:', handlers);
   const handler = handlers[data.name || data.label];
-  console.log('🚀 ~ executeBlock ~ handler:', handler);
 
   if (handler) {
     const result = await handler(data, { handleSelector });
     // Remove DOM related to executed block
-    removeExecutedBlock();
+    await removeExecutedBlock();
     return result;
   }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UiTextarea from '@/components/ui/UiTextarea';
 import UiLabel from '@/components/ui/UiLabel';
 import UiInput from '@/components/ui/UiInput';
@@ -8,15 +8,23 @@ interface EditNewTabProps {
 }
 
 const EditNewTab = ({ compData, updateBlockData }: EditNewTabProps) => {
-  const [description, setDescription] = useState(compData.data.description);
-  const [newTabUrl, setNewTabUrl] = useState(compData.data.url);
+  const { description, url } = compData.data;
+
+  const [desc, setDesc] = useState(description);
+  const [newTabUrl, setNewTabUrl] = useState(url);
+
+  useEffect(() => {
+    setDesc(description);
+    setNewTabUrl(url);
+  }, [description, url]);
+
   return (
     <div>
       <UiTextarea
         placeholder="Please enter the description ..."
-        value={description}
+        value={desc}
         onChange={(e) => {
-          setDescription(e.target.value);
+          setDesc(e.target.value);
           updateBlockData({ description: e.target.value });
         }}
       />
