@@ -52,3 +52,38 @@ export const waitTabLoaded = ({ tabId, ms = 10000, listenError = false }) => {
     activeTabStatus();
   });
 };
+
+export const automaRefDataStr = (varName) => {
+  return `
+function findData(obj, path) {
+  const paths = path.split('.');
+  const isWhitespace = paths.length === 1 && !/\\S/.test(paths[0]);
+
+  if (path.startsWith('$last') && Array.isArray(obj)) {
+    paths[0] = obj.length - 1;
+  }
+
+  if (paths.length === 0 || isWhitespace) return obj;
+  else if (paths.length === 1) return obj[paths[0]];
+
+  let result = obj;
+
+  for (let i = 0; i < paths.length; i++) {
+    if (result[paths[i]] == undefined) {
+      return undefined;
+    } else {
+      result = result[paths[i]];
+    }
+  }
+
+  return result;
+}
+function automaRefData(keyword, path = '') {
+  const data = ${varName}[keyword];
+
+  if (!data) return;
+
+  return findData(data, path);
+}
+  `;
+};

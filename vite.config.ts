@@ -35,7 +35,7 @@ export default defineConfig({
   build: {
     watch: __DEV__ ? {} : null,
     cssCodeSplit: false,
-    emptyOutDir: false,
+    emptyOutDir: true,
     sourcemap: true,
     outDir: r(outputDir),
     rollupOptions: {

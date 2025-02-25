@@ -55,7 +55,7 @@ const WorkflowEditor = ({
 
   // fetch nodeTypes
   const nodeTypes = useMemo(() => ({ BlockBasic }), []);
-  const edgeTypes = useMemo(() => ({ 'custom-edge': CustomEdge }), []);
+  const edgeTypes = useMemo(() => ({ default: CustomEdge }), []);
 
   useEffect(() => {
     applyFlowData();
@@ -117,7 +117,7 @@ const WorkflowEditor = ({
   return (
     <div
       className="workflow-editor focus:outline-none"
-      style={{ height: 'calc(100vh - 40px)' }}
+      style={{ height: '100vh' }}
     >
       <ReactFlow
         fitView

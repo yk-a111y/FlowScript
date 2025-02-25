@@ -1,5 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import { customAlphabet } from 'nanoid/non-secure';
+import { automaFetchClient } from '../utils/jsBlockUtils';
+import { automaRefDataStr, waitTabLoaded } from '../helper';
 
 const nanoid = customAlphabet('1234567890abcdef', 5);
 
@@ -53,11 +55,13 @@ async function javascriptCode(blockData, { refData }) {
 
   const nextBlockId = this.getBlockConnections(block.id);
 
+  // execute script in every new tab
   if (data.everyNewTab) {
     const isScriptExist = this.preloadScripts.some(({ id }) => id === block.id);
 
-    if (!isScriptExist)
+    if (!isScriptExist) {
       this.preloadScripts.push({ id: block.id, data: cloneDeep(data) });
+    }
     if (!this.activeTab.id) return { data: '', nextBlockId };
   } else if (!this.activeTab.id && data.context !== 'background') {
     throw new Error('no-tab');
@@ -80,6 +84,30 @@ async function javascriptCode(blockData, { refData }) {
     payload.refData = { ...newRefData, secrets: {} };
   }
 
+  const preloadScriptsPromise = await Promise.allSettled(
+    data.preloadScripts.map(async (script) => {
+      const { protocol } = new URL(script.src);
+      const isValidUrl = /https?/.test(protocol);
+      if (!isValidUrl) return null;
+
+      const response = await fetch(script.src);
+      if (!response.ok) throw new Error(response.statusText);
+
+      const result = await response.text();
+
+      return {
+        script: result,
+        id: `automa-script-${nanoid()}`,
+        removeAfterExec: script.removeAfterExec,
+      };
+    })
+  );
+  const preloadScripts = preloadScriptsPromise.reduce((acc, item) => {
+    if (item.status === 'fulfilled') acc.push(item.value);
+
+    return acc;
+  }, []);
+
   const instanceId = `automa${nanoid()}`;
   const automaScript =
     data.everyNewTab && (!data.context || data.context !== 'background')
@@ -89,6 +117,35 @@ async function javascriptCode(blockData, { refData }) {
           refData: payload.refData,
           everyNewTab: data.everyNewTab,
         });
+
+  console.log('🚀 ~ javascriptCode ~ automaScript:', automaScript);
+  // wait tab loaded if this is not background script
+  if (data.context !== 'background') {
+    await waitTabLoaded({
+      tabId: this.activeTab.id,
+      ms: this.settings?.tabLoadTimeout ?? 30000,
+    });
+  }
+
+  const inSandbox =
+    (this.engine.isMV2 || this.engine.isPopup) &&
+    BROWSER_TYPE !== 'firefox' &&
+    data.context === 'background';
+  const result = await (inSandbox
+    ? messageSandbox('javascriptBlock', {
+        instanceId,
+        preloadScripts,
+        refData: payload.refData,
+        blockData: cloneDeep(payload.data),
+      })
+    : executeInWebpage(
+        [payload, preloadScripts, automaScript, instanceId],
+        {
+          tabId: this.activeTab.id,
+          frameIds: [this.activeTab.frameId || 0],
+        },
+        this
+      ));
 
   return {
     nextBlockId,
