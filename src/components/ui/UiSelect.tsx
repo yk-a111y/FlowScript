@@ -14,23 +14,29 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
     hasIcon?: boolean;
+    label?: string;
   }
->(({ className, children, hasIcon = false, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-      className
+>(({ className, children, hasIcon = false, label, ...props }, ref) => (
+  <div>
+    {label && (
+      <p className="ml-1 text-sm text-gray-600 dark:text-gray-200">{label}</p>
     )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown
-        className={`${hasIcon ? 'hidden' : ''} h-4 w-4 opacity-50`}
-      />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <SelectPrimitive.Icon asChild>
+        <ChevronDown
+          className={`${hasIcon ? 'hidden' : ''} h-4 w-4 opacity-50`}
+        />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  </div>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
