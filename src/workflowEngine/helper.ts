@@ -1,4 +1,27 @@
 import browser from 'webextension-polyfill';
+import { customAlphabet } from 'nanoid/non-secure';
+
+export const messageSandbox = (type, data = {}) => {
+  const nanoid = customAlphabet('1234567890abcdef', 5);
+
+  return new Promise((resolve) => {
+    const messageId = nanoid();
+
+    const iframeEl = document.getElementById('sandbox');
+    iframeEl.contentWindow.postMessage({ id: messageId, type, ...data }, '*');
+
+    const messageListener = ({ data: messageData }) => {
+      if (messageData?.type !== 'sandbox' || messageData?.id !== messageId)
+        return;
+
+      window.removeEventListener('message', messageListener);
+
+      resolve(messageData.result);
+    };
+
+    window.addEventListener('message', messageListener);
+  });
+};
 
 export const waitTabLoaded = ({ tabId, ms = 10000, listenError = false }) => {
   return new Promise((resolve, reject) => {
@@ -86,4 +109,99 @@ function automaRefData(keyword, path = '') {
   return findData(data, path);
 }
   `;
+};
+
+export const sendDebugCommand = (tabId, method, params = {}) => {
+  return new Promise((resolve) => {
+    chrome.debugger.sendCommand({ tabId }, method, params, resolve);
+  });
+};
+
+export const checkCSPAndInject = async (
+  { target, debugMode, options = {}, injectOptions = {} },
+  callback
+) => {
+  // check is blocked by CSP
+  const [isBlockedByCSP] = await browser.scripting.executeScript({
+    target,
+    func: () => {
+      return new Promise((resolve) => {
+        const escapePolicy = (script) => {
+          if (window?.trustedTypes?.createPolicy) {
+            const escapeElPolicy = window.trustedTypes.createPolicy(
+              'forceInner',
+              {
+                createHTML: (to_escape) => to_escape,
+                createScript: (to_escape) => to_escape,
+              }
+            );
+
+            return escapeElPolicy.createScript(script);
+          }
+
+          return script;
+        };
+        const eventListener = ({ srcElement }) => {
+          if (!srcElement || srcElement.id !== 'automa-csp') return;
+          srcElement.remove();
+          resolve(true);
+        };
+
+        document.addEventListener('securitypolicyviolation', eventListener);
+        const script = document.createElement('script');
+        script.id = 'automa-csp';
+        script.innerText = escapePolicy('console.log("CSP check...")');
+
+        setTimeout(() => {
+          document.removeEventListener(
+            'securitypolicyviolation',
+            eventListener
+          );
+          script.remove();
+          resolve(false);
+        }, 500);
+
+        document.body.appendChild(script);
+      });
+    },
+    world: 'MAIN',
+    ...(injectOptions || {}),
+  });
+  // console.log('🚀 ~ isBlockedByCSP:', isBlockedByCSP);
+
+  if (isBlockedByCSP.result) {
+    await new Promise((resolve) => {
+      chrome.debugger.attach({ tabId: target.tabId }, '1.3', resolve);
+    });
+
+    const jsCode = await callback();
+    const execResult = await sendDebugCommand(
+      target.tabId,
+      'Runtime.evaluate',
+      {
+        expression: jsCode,
+        userGesture: true,
+        awaitPromise: true,
+        returnByValue: true,
+        ...(options || {}),
+      }
+    );
+
+    if (!debugMode) await chrome.debugger.detach({ tabId: target.tabId });
+
+    if (!execResult || !execResult.result) {
+      throw new Error('Unable execute code');
+    }
+
+    if (execResult.result.subtype === 'error') {
+      throw new Error(execResult.result.description);
+    }
+
+    return {
+      isBlocked: true,
+      value: execResult.result.value || null,
+    };
+  }
+
+  return { isBlocked: false, value: null };
 };

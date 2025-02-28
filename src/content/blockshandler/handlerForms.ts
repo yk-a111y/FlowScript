@@ -6,7 +6,7 @@ async function forms(block) {
   const { data } = block;
   const elements = await handleSelector(block, { returnElement: true });
 
-  console.log('🚀 ~ forms ~ elements:', elements);
+  // console.log('🚀 ~ forms ~ elements:', elements);
   if (!elements) {
     throw new Error('element-not-found');
   }

@@ -90,7 +90,6 @@ const WorkflowEditor = ({
     });
     const blockData = JSON.parse(event.dataTransfer.getData('block'));
     blockData.id = nanoid();
-    console.log('🚀 ~ handleDropInFlow ~ blockData:', blockData);
 
     // create new node
     const newNode = {
@@ -98,7 +97,6 @@ const WorkflowEditor = ({
       position,
       ...blockData,
     };
-    console.log('🚀 ~ handleDropInFlow ~ newNode:', newNode);
 
     setNodes([...nodes, newNode]);
   };
