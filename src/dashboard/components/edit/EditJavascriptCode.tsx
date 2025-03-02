@@ -8,6 +8,8 @@ import UiSelect, {
   SelectValue,
 } from '@/components/ui/UiSelect';
 import UiCheckbox from '@/components/ui/UiCheckbox';
+import UiModal from '@/components/ui/UiModal';
+import SharedCodeMirror from '../SharedCodeMirror';
 
 interface EditJavascriptCodeProps {
   compData: any;
@@ -28,13 +30,14 @@ const EditJavascriptCode = ({
     data.runBeforePageLoaded
   );
   const [showCodeModal, setShowCodeModal] = useState(false);
+  const [code, setCode] = useState(data.code);
 
   return (
     <div className="mb-2 mt-4">
       <UiTextarea
         className="mb-1 w-full"
         value={description}
-        placeholder={compData.description}
+        placeholder="Description"
         onChange={(e) => {
           setDescription(e.target.value);
           updateBlockData({ description: e.target.value });
@@ -108,6 +111,21 @@ const EditJavascriptCode = ({
             Run before page loaded
           </UiCheckbox>
         </>
+      )}
+      {showCodeModal && (
+        <UiModal
+          open={showCodeModal}
+          contentClass="max-w-4xl"
+          onClose={() => setShowCodeModal(false)}
+        >
+          <SharedCodeMirror
+            code={code}
+            updateCode={(newValue) => {
+              setCode(newValue);
+              updateBlockData({ code: newValue }, true);
+            }}
+          />
+        </UiModal>
       )}
     </div>
   );

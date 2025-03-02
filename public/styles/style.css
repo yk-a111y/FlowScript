@@ -66,3 +66,53 @@
   transform: scale(0) !important;
   transition: transform 200ms ease;
 }
+
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-enter-active .modal-ui__content,
+.modal-leave-active .modal-ui__content {
+  transition: transform 0.3s ease;
+  transform: translateY(0px);
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-from .modal-ui__content,
+.modal-leave-to .modal-ui__content {
+  transform: translateY(30px);
+}
+.modal-ui__content-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cm-content {
+  flex-basis: fit-content;
+}
+.cm-line {
+  white-space: pre-wrap;
+}
+.codemirror.hide-gutters .cm-gutters {
+  display: none !important;
+}
+.cm-editor {
+  height: 100%;
+  font-size: 15px;
+  @apply pb-6;
+}
+.cm-editor .cm-gutters,
+.cm-editor .cm-content,
+.cm-tooltip.cm-tooltip-autocomplete > ul {
+  font-family: 'Source Code Pro', Fira code, Fira Mono, Consolas, Menlo, Courier,
+    monospace !important;
+}
+.cm-tooltip-autocomplete {
+  margin-left: -385px;
+  margin-top: -22px;
+}
