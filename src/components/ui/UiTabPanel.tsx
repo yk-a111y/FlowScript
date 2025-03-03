@@ -17,9 +17,9 @@ interface UiTabPanelProps {
 const UiTabPanel = ({
   value = '',
   activeClass = 'ui-tab-panel--active',
+  className = '',
   cache,
   children,
-  className,
 }) => {
   // get current active value and cache setting from context
   const tabPanelsContext = useContext(TabPanelsContext);

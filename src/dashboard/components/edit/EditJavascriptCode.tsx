@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import UiTextarea from '@/components/ui/UiTextarea';
 import UiInput from '@/components/ui/UiInput';
 import UiSelect, {
@@ -14,6 +14,7 @@ import UiTabs from '@/components/ui/UiTabs';
 import UiTab from '@/components/ui/UiTab';
 import UiTabPanels from '@/components/ui/UiTabPanels';
 import UiTabPanel from '@/components/ui/UiTabPanel';
+
 interface EditJavascriptCodeProps {
   compData: any;
   updateBlockData: (data: any, isData?: boolean) => void;
@@ -23,7 +24,7 @@ const EditJavascriptCode = ({
   compData,
   updateBlockData,
 }: EditJavascriptCodeProps) => {
-  console.log('🚀 ~ compData:', compData);
+  // console.log('🚀 ~ compData:', compData);
   const { data } = compData;
   const [description, setDescription] = useState(data.description);
   const [timeoutValue, setTimeoutValue] = useState(data.timeout);
@@ -32,8 +33,8 @@ const EditJavascriptCode = ({
   const [runBeforePageLoaded, setRunBeforePageLoaded] = useState(
     data.runBeforePageLoaded
   );
-  const [showCodeModal, setShowCodeModal] = useState(false);
   const [code, setCode] = useState(data.code);
+  const [showCodeModal, setShowCodeModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState<string | number>('code');
 
@@ -60,7 +61,7 @@ const EditJavascriptCode = ({
           updateBlockData({ description: e.target.value });
         }}
       />
-      {!data.everyNewTab && (
+      {!everyNewTab && (
         <>
           <UiInput
             className="mb-2 w-full"
@@ -102,10 +103,10 @@ const EditJavascriptCode = ({
             setShowCodeModal(true);
           }}
         >
-          {data.code}
+          {code}
         </pre>
       )}
-      {data.context !== 'background' && (
+      {context !== 'background' && (
         <>
           <UiCheckbox
             className="mt-2"
@@ -134,10 +135,12 @@ const EditJavascriptCode = ({
           open={showCodeModal}
           contentClass="max-w-4xl"
           header={modalHeader()}
-          onClose={() => setShowCodeModal(false)}
+          onClose={() => {
+            setShowCodeModal(false);
+          }}
         >
           <UiTabPanels
-            modelValue={activeTab}
+            modelValue={activeTab as string}
             className="overflow-auto"
             style={{ height: 'calc(100vh - 9rem)' }}
             onChange={(value: string | number) => setActiveTab(value)}
@@ -148,7 +151,7 @@ const EditJavascriptCode = ({
                 everyNewTab={everyNewTab}
                 updateCode={(newValue) => {
                   setCode(newValue);
-                  updateBlockData({ code: newValue }, true);
+                  updateBlockData({ code: newValue });
                 }}
               />
             </UiTabPanel>

@@ -15,9 +15,8 @@ export const useEditingBlockStore = create<EditingBlockStoreState>(
     editingBlock: {},
     setEditingBlock: (node: Node) => {
       const block = blocks[node.data.label as keyof typeof blocks];
-      const { editComponent, data: blockDefData, name } = block;
-      const blockData = defu(node, blockDefData);
-      set({ editingBlock: { ...blockData, editComponent, name } });
+      const blockData = defu(node, block);
+      set({ editingBlock: { ...blockData } });
     },
   })
 );

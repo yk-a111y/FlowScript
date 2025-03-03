@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import browser from 'webextension-polyfill';
 import { Node, ReactFlowInstance, ReactFlowProvider } from '@xyflow/react';
@@ -26,6 +26,10 @@ const WorkflowDetail = () => {
     return workflow.drawflow;
   }, [workflow]);
 
+  useEffect(() => {
+    setIsEditing(false);
+  }, []);
+
   const onEditorInit = (instance: ReactFlowInstance) => {
     console.log('🚀 ~ onEditorInit ~ instance:', instance);
     setEditor(instance);
@@ -33,7 +37,7 @@ const WorkflowDetail = () => {
 
   // 初始化block编辑区
   const initEditBlock = (node: Node) => {
-    console.log("🚀 ~ initEditBlock ~ node:", node)
+    console.log('🚀 ~ initEditBlock ~ node:', node);
     // const block = blocks[node.data.label as keyof typeof blocks];
     // console.log('🚀 ~ initEditBlock ~ block:', block);
     // const { editComponent, data: blockDefData, name } = block;
@@ -95,25 +99,27 @@ const WorkflowDetail = () => {
     }
   };
 
-  const updateBlockData = debounce((value: any, isData = false) => {
+  const updateBlockData = debounce((value: any, isData = true) => {
     const { id } = editingBlock;
     const node = editor?.getNode(id);
     if (node) {
+      console.log('🚀 ~ updateBlockData ~ node:', node);
       editor.setNodes((nodes: Node[]) =>
         nodes.map((node) =>
           node.id === id
             ? isData
-              ? { ...node, ...value }
-              : {
+              ? {
                   ...node,
                   data: {
                     ...node.data,
                     ...value,
                   },
                 }
+              : { ...node, ...value }
             : node
         )
       );
+      console.log('🚀 ~ updateBlockData ~ node:', node);
     }
   }, 200);
 

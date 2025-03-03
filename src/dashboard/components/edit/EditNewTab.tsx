@@ -8,15 +8,11 @@ interface EditNewTabProps {
 }
 
 const EditNewTab = ({ compData, updateBlockData }: EditNewTabProps) => {
+  console.log('🚀 ~ EditNewTab ~ compData:', compData);
   const { description, url } = compData.data;
-  
+
   const [desc, setDesc] = useState(description);
   const [newTabUrl, setNewTabUrl] = useState(url);
-
-  useEffect(() => {
-    setDesc(description);
-    setNewTabUrl(url);
-  }, [description, url]);
 
   return (
     <div>

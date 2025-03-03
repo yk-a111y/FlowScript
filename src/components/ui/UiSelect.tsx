@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef<
     label?: string;
   }
 >(({ className, children, hasIcon = false, label, ...props }, ref) => (
-  <div>
+  <>
     {label && (
       <p className="ml-1 text-sm text-gray-600 dark:text-gray-200">{label}</p>
     )}
@@ -36,7 +36,7 @@ const SelectTrigger = React.forwardRef<
         />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
-  </div>
+  </>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 

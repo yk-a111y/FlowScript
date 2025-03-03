@@ -36,6 +36,13 @@ const SharedCodeMirror = ({
     css: css,
   });
 
+  const updateListener = EditorView.updateListener.of((event) => {
+    if (event.docChanged) {
+      const newValue = event.state.doc.toString();
+      updateCode?.(newValue);
+    }
+  });
+
   useEffect(() => {
     let editor: EditorView | null = null;
     // const customExtension = Array.isArray(extensions)
@@ -65,14 +72,6 @@ const SharedCodeMirror = ({
       editor?.destroy();
     };
   }, []);
-
-  const updateListener = EditorView.updateListener.of((event) => {
-    if (event.docChanged) {
-      const newValue = event.state.doc.toString();
-      console.log('🚀 ~ updateListener ~ newValue:', newValue);
-      updateCode?.(newValue);
-    }
-  });
 
   return (
     <div
