@@ -16,7 +16,7 @@ interface UiModalProps extends PropsWithChildren {
   blur?: boolean;
   disableTeleport?: boolean;
   activator?: React.ReactNode;
-  header?: string;
+  header?: React.ReactNode;
   headerAppend?: React.ReactNode;
 }
 

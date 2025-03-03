@@ -10,7 +10,10 @@ import UiSelect, {
 import UiCheckbox from '@/components/ui/UiCheckbox';
 import UiModal from '@/components/ui/UiModal';
 import SharedCodeMirror from '../SharedCodeMirror';
-
+import UiTabs from '@/components/ui/UiTabs';
+import UiTab from '@/components/ui/UiTab';
+import UiTabPanels from '@/components/ui/UiTabPanels';
+import UiTabPanel from '@/components/ui/UiTabPanel';
 interface EditJavascriptCodeProps {
   compData: any;
   updateBlockData: (data: any, isData?: boolean) => void;
@@ -31,6 +34,20 @@ const EditJavascriptCode = ({
   );
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [code, setCode] = useState(data.code);
+
+  const [activeTab, setActiveTab] = useState<string | number>('code');
+
+  const modalHeader = () => {
+    return (
+      <UiTabs
+        value={activeTab}
+        onChange={(value: string | number) => setActiveTab(value)}
+      >
+        <UiTab value="code">Code</UiTab>
+        <UiTab value="preloadScript">PreloadScript</UiTab>
+      </UiTabs>
+    );
+  };
 
   return (
     <div className="mb-2 mt-4">
@@ -116,15 +133,29 @@ const EditJavascriptCode = ({
         <UiModal
           open={showCodeModal}
           contentClass="max-w-4xl"
+          header={modalHeader()}
           onClose={() => setShowCodeModal(false)}
         >
-          <SharedCodeMirror
-            code={code}
-            updateCode={(newValue) => {
-              setCode(newValue);
-              updateBlockData({ code: newValue }, true);
-            }}
-          />
+          <UiTabPanels
+            modelValue={activeTab}
+            className="overflow-auto"
+            style={{ height: 'calc(100vh - 9rem)' }}
+            onChange={(value: string | number) => setActiveTab(value)}
+          >
+            <UiTabPanel value="code" cache={true} className="h-full">
+              <SharedCodeMirror
+                code={code}
+                everyNewTab={everyNewTab}
+                updateCode={(newValue) => {
+                  setCode(newValue);
+                  updateBlockData({ code: newValue }, true);
+                }}
+              />
+            </UiTabPanel>
+            <UiTabPanel value="preloadScript" cache={true}>
+              <div>11111</div>
+            </UiTabPanel>
+          </UiTabPanels>
         </UiModal>
       )}
     </div>

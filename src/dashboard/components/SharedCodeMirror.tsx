@@ -11,6 +11,7 @@ import { javascript } from '@codemirror/lang-javascript';
 
 interface SharedCodeMirrorProps {
   code?: string;
+  everyNewTab?: boolean;
   hideLang?: boolean;
   lang?: string;
   lineNumbers?: boolean;
@@ -20,6 +21,7 @@ interface SharedCodeMirrorProps {
 
 const SharedCodeMirror = ({
   code = '',
+  everyNewTab,
   hideLang = false,
   lang = 'javascript',
   lineNumbers = false,
@@ -75,9 +77,10 @@ const SharedCodeMirror = ({
   return (
     <div
       ref={codeMirrorRef}
-      className={`codemirror relative overflow-auto rounded-lg ${
-        lineNumbers ? 'hide-gutters' : ''
-      }`}
+      className={`codemirror relative overflow-auto rounded-lg 
+        ${lineNumbers ? 'hide-gutters' : ''}
+        ${everyNewTab ? 'h-full' : 'h-5/6'}
+      `}
     >
       {!hideLang && (
         <div className="absolute bottom-0 left-0 z-10 flex h-6 w-full items-center px-2 text-xs text-gray-300">
