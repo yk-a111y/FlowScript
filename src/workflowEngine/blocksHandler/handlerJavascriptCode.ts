@@ -1,51 +1,114 @@
+import browser from 'webextension-polyfill';
 import cloneDeep from 'lodash.clonedeep';
 import { customAlphabet } from 'nanoid/non-secure';
-import { automaFetchClient } from '../utils/jsBlockUtils';
-import { automaRefDataStr, waitTabLoaded } from '../helper';
+import { parseJSON } from '../../utils/helper';
+import {
+  automaFetchClient,
+  jsContentHandler,
+  jsContentHandlerEval,
+} from '../utils/jsBlockUtils';
+import {
+  automaRefDataStr,
+  waitTabLoaded,
+  messageSandbox,
+  checkCSPAndInject,
+} from '../helper';
 
 const nanoid = customAlphabet('1234567890abcdef', 5);
 
 const getAutomaScript = ({ varName, refData, everyNewTab, isEval = false }) => {
   let str = `
-const ${varName} = ${JSON.stringify(refData)};
-${automaRefDataStr(varName)}
-function automaSetVariable(name, value) {
-  const variables = ${varName}.variables;
-  if (!variables) ${varName}.variables = {}
+    const ${varName} = ${JSON.stringify(refData)};
+    ${automaRefDataStr(varName)}
+    function automaSetVariable(name, value) {
+      const variables = ${varName}.variables;
+      if (!variables) ${varName}.variables = {}
 
-  ${varName}.variables[name] = value;
-}
-function automaNextBlock(data, insert = true) {
-  if (${isEval}) {
-    $automaResolve({
-      columns: {
-        data,
-        insert,
-      },
-      variables: ${varName}.variables,
-    });
-  } else{
-    document.body.dispatchEvent(new CustomEvent('__automa-next-block__', { detail: { data, insert, refData: ${varName} } }));
-  }
-}
-function automaResetTimeout() {
-  if (${isEval}) {
-    clearTimeout($automaTimeout);
-    $automaTimeout = setTimeout(() => {
-      resolve();
-    }, $automaTimeoutMs);
-  } else {
-    document.body.dispatchEvent(new CustomEvent('__automa-reset-timeout__'));
-  }
-}
-function automaFetch(type, resource) {
-  return (${automaFetchClient.toString()})('${varName}', { type, resource });
-}
+      ${varName}.variables[name] = value;
+    }
+    function automaNextBlock(data, insert = true) {
+      if (${isEval}) {
+        $automaResolve({
+          columns: {
+            data,
+            insert,
+          },
+          variables: ${varName}.variables,
+        });
+      } else{
+        document.body.dispatchEvent(new CustomEvent('__automa-next-block__', { detail: { data, insert, refData: ${varName} } }));
+      }
+    }
+    function automaResetTimeout() {
+      if (${isEval}) {
+        clearTimeout($automaTimeout);
+        $automaTimeout = setTimeout(() => {
+          resolve();
+        }, $automaTimeoutMs);
+      } else {
+        document.body.dispatchEvent(new CustomEvent('__automa-reset-timeout__'));
+      }
+    }
+    function automaFetch(type, resource) {
+      return (${automaFetchClient.toString()})('${varName}', { type, resource });
+    }
   `;
 
   if (everyNewTab) str = automaRefDataStr(varName);
 
   return str;
+};
+
+const executeInWebpage = async (args, target, worker) => {
+  // console.log('🚀 ~ executeInWebpage ~ worker:', worker);
+  // console.log('🚀 ~ executeInWebpage ~ target:', target);
+  if (!target.tabId) {
+    throw new Error('no-tab');
+  }
+
+  // execute script in MV2
+  if (worker.engine.isMV2) {
+    args[0] = cloneDeep(args[0]);
+
+    const result = await worker._sendMessageToTab({
+      label: 'javascript-code',
+      data: args,
+    });
+
+    return result;
+  }
+
+  const { debugMode } = worker.engine.workflow.settings;
+  const cspResult = await checkCSPAndInject({ target, debugMode }, () => {
+    const { 0: blockData, 1: preloadScripts, 3: varName } = args;
+    const automaScript = getAutomaScript({
+      varName,
+      isEval: true,
+      refData: blockData.refData,
+      everyNewTab: blockData.data.everyNewTab,
+    });
+    const jsCode = jsContentHandlerEval({
+      blockData,
+      automaScript,
+      preloadScripts,
+    });
+    return jsCode;
+  });
+  if (cspResult.isBlocked) return cspResult.value;
+
+  // execute script in MV3
+  const [{ result }] = await browser.scripting.executeScript({
+    args,
+    target,
+    world: 'MAIN',
+    func: jsContentHandler,
+  });
+
+  if (typeof result?.columns?.data === 'string') {
+    result.columns.data = parseJSON(result.columns.data, {});
+  }
+
+  return result;
 };
 
 async function javascriptCode(blockData, { refData }) {
@@ -117,8 +180,7 @@ async function javascriptCode(blockData, { refData }) {
           refData: payload.refData,
           everyNewTab: data.everyNewTab,
         });
-
-  console.log('🚀 ~ javascriptCode ~ automaScript:', automaScript);
+  // console.log('🚀 ~ javascriptCode ~ automaScript:', automaScript);
   // wait tab loaded if this is not background script
   if (data.context !== 'background') {
     await waitTabLoaded({
@@ -146,6 +208,21 @@ async function javascriptCode(blockData, { refData }) {
         },
         this
       ));
+
+  // Result After Execute JS Block
+  if (result) {
+    if (result.columns.data?.$error) {
+      throw new Error(result.columns.data.message);
+    }
+
+    if (result.variables) {
+      await Promise.allSettled(
+        Object.keys(result.variables).map(async (varName) => {
+          await this.setVariable(varName, result.variables[varName]);
+        })
+      );
+    }
+  }
 
   return {
     nextBlockId,

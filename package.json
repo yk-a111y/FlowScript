@@ -13,6 +13,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/commands": "^6.8.0",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.9",
+    "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.36.3",
     "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-select": "^2.1.5",
@@ -26,6 +34,7 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "codemirror": "^6.0.1",
     "dayjs": "^1.11.13",
     "defu": "^6.1.4",
     "fs-extra": "^11.2.0",

@@ -1,43 +1,68 @@
-import React, { createContext, useContext, PropsWithChildren } from 'react';
-
-interface UiTabPanelsProps {
-  modelValue?: string | number;
-  cache?: boolean;
-}
-
-// type of context
-interface UiTabPanelsContextType {
-  modelValue: string | number;
-  cache: boolean;
-}
+import { cn } from '@/lib/utils';
+import React, { createContext, useState, useEffect } from 'react';
 
 // create context
-const UiTabPanelsContext = createContext<UiTabPanelsContextType | undefined>(
-  undefined
-);
+export const TabPanelsContext = createContext({
+  modelValue: { value: '' },
+  cache: { value: false },
+});
 
-const UiTabPanels: React.FC<PropsWithChildren<UiTabPanelsProps>> = ({
+interface UiTabPanelsProps {
+  modelValue: string | number;
+  onChange: (value: string | number) => void;
+  cache?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+/**
+ * UiTabPanels
+ */
+const UiTabPanels = ({
   modelValue = '',
+  onChange,
   cache = false,
   children,
+  className,
+  style,
 }) => {
-  // transform props to obj
-  const props = { modelValue, cache };
+  // create context value
+  const [contextValue, setContextValue] = useState({
+    modelValue: { value: modelValue },
+    cache: { value: cache },
+  });
+
+  // when props change, update context
+  useEffect(() => {
+    setContextValue({
+      modelValue: { value: modelValue },
+      cache: { value: cache },
+    });
+  }, [modelValue, cache]);
+
+  /**
+   * handle tab change
+   * @param {string|number} value - new tab value
+   */
+  const handleTabChange = (value) => {
+    if (onChange) {
+      onChange(value);
+    }
+  };
+
+  // provide contextValue to child components
+  const providerValue = {
+    ...contextValue,
+    setModelValue: handleTabChange,
+  };
 
   return (
-    <UiTabPanelsContext.Provider value={props}>
-      <div className="ui-tab-panels">{children}</div>
-    </UiTabPanelsContext.Provider>
+    <TabPanelsContext.Provider value={providerValue}>
+      <div className={cn('ui-tab-panels', className)} style={style}>
+        {children}
+      </div>
+    </TabPanelsContext.Provider>
   );
 };
 
-// useContext Hook
-const useUiTabPanels = (): UiTabPanelsContextType => {
-  const context = useContext(UiTabPanelsContext);
-  if (!context) {
-    throw new Error('useUiTabPanels must be used within a UiTabPanels');
-  }
-  return context;
-};
-
-export { UiTabPanels, useUiTabPanels };
+export default UiTabPanels;

@@ -8,6 +8,7 @@ import UiSelect, {
   SelectValue,
 } from '@/components/ui/UiSelect';
 import EditInteractionBase from './EditInteractionBase';
+import UiLabel from '@/components/ui/UiLabel';
 
 interface EditFormsProps {
   compData: any;
@@ -34,24 +35,26 @@ const EditForms = ({ compData, updateBlockData }: EditFormsProps) => {
         Get From Value
       </UiCheckbox>
       {!getFromValue && (
-        <UiSelect
-          value={type}
-          onValueChange={(value) => {
-            setType(value);
-            updateBlockData({ type: value });
-          }}
-        >
-          <SelectTrigger className="bg-input">
-            <SelectValue placeholder="Select a value" />
-          </SelectTrigger>
-          <SelectContent className="font-serif bg-white dark:bg-gray-900">
-            {forms.map((form) => (
-              <SelectItem key={form} value={form}>
-                {form}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </UiSelect>
+        <>
+          <UiSelect
+            value={type}
+            onValueChange={(value) => {
+              setType(value);
+              updateBlockData({ type: value });
+            }}
+          >
+            <SelectTrigger className="bg-input" label="Context">
+              <SelectValue placeholder="Select a value" />
+            </SelectTrigger>
+            <SelectContent className="font-serif bg-white dark:bg-gray-900">
+              {forms.map((form) => (
+                <SelectItem key={form} value={form}>
+                  {form}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </UiSelect>
+        </>
       )}
     </EditInteractionBase>
   );

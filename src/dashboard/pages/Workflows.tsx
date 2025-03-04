@@ -39,7 +39,7 @@ const Workflows = () => {
           </UiButton>
           <UiSelect>
             <SelectTrigger
-              className="bg-accent h-[2.875rem] px-4 py-2 flex-1 rounded-l-none text-white hover:bg-gray-700"
+              className="bg-accent h-[2.875rem] py-2 flex-1 rounded-l-none text-white hover:bg-gray-700"
               hasIcon
             >
               <UiIcon name="RiArrowDownSLine" />

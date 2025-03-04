@@ -8,7 +8,7 @@ async function executeBlock(data) {
 
   // Get Interaction Handler
   const handlers = blocksHandler();
-  console.log('🚀 ~ executeBlock ~ handlers:', handlers);
+  // console.log('🚀 ~ executeBlock ~ handlers:', handlers);
   const handler = handlers[data.name || data.label];
 
   if (handler) {
