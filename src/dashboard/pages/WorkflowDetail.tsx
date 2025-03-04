@@ -9,18 +9,20 @@ import { debounce } from '@/utils/helper';
 import WorkflowDetailsCard from '../components/WorkflowDetailsCard';
 import WorkflowEditor from '../components/WorkflowEditor';
 import WorkflowEditBlock from '../components/WorkflowEditBlock';
+import EditorLocalActions from '../components/EditorLocalActions';
 
 const WorkflowDetail = () => {
-  // 从路由参数中获取workflowId
   const { id: workflowId = '' } = useParams<{ id: string }>();
+
   const { isEditing, setIsEditing } = useIsEditingStore();
+  const { editingBlock, setEditingBlock } = useEditingBlockStore();
   const { getWorkflowById, updateWorkflow } = useWorkflowStore();
   const workflow = getWorkflowById(workflowId);
   console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
 
   const [editor, setEditor] = useState<ReactFlowInstance>();
   const [showSidebar, setShowSidebar] = useState(true);
-  const { editingBlock, setEditingBlock } = useEditingBlockStore();
+  const [dataChanged, setDataChanged] = useState(false);
 
   const editorData = useMemo(() => {
     return workflow.drawflow;
@@ -94,6 +96,7 @@ const WorkflowDetail = () => {
       );
       // await registerWorkflowTrigger(props.workflow.id, triggerBlock);
       // emit('change', { drawflow: flow });
+      setDataChanged(false);
     } catch (error) {
       console.error(error);
     }
@@ -120,6 +123,7 @@ const WorkflowDetail = () => {
         )
       );
       console.log('🚀 ~ updateBlockData ~ node:', node);
+      setDataChanged(true);
     }
   }, 200);
 
@@ -142,10 +146,11 @@ const WorkflowDetail = () => {
       {/* edit area */}
       <div className="relative flex-1 overflow-auto">
         {/* top func area */}
-        <div className="top-func absolute left-0 top-0 z-10 flex w-full items-center p-4">
-          <div onClick={onRunWorkflow}>开始</div>
-          <div onClick={onSaveWorkflow}>保存</div>
-        </div>
+        <EditorLocalActions
+          isDataChanged={dataChanged}
+          onRunWorkflow={onRunWorkflow}
+          onSaveWorkflow={onSaveWorkflow}
+        />
         {/* editor */}
         <div
           className="workflow-right-flow-area"
@@ -154,6 +159,8 @@ const WorkflowDetail = () => {
           <ReactFlowProvider>
             <WorkflowEditor
               editorData={editorData}
+              onUpdateNode={() => setDataChanged(true)}
+              onDeleteNode={() => setDataChanged(true)}
               onInit={onEditorInit}
               onEdit={initEditBlock}
             />

@@ -25,12 +25,16 @@ interface WorkflowEditorProps {
   editorData: IWorkflowDrawflow;
   onInit: (instance: ReactFlowInstance) => void;
   onEdit: (nodeData: Node) => void;
+  onUpdateNode: () => void;
+  onDeleteNode: () => void;
 }
 
 const WorkflowEditor = ({
   editorData,
   onInit,
   onEdit,
+  onUpdateNode,
+  onDeleteNode,
 }: WorkflowEditorProps) => {
   // Init nodes and edges
   const { nodes: initialNodes, edges: initialEdges } = editorData;
@@ -40,14 +44,17 @@ const WorkflowEditor = ({
   // register flow events
   const onNodesChange = useCallback((changes: NodeChange[]) => {
     setNodes((nds) => applyNodeChanges(changes, nds) as typeof nds);
+    onUpdateNode();
   }, []);
 
   const onEdgesChange = useCallback((changes: EdgeChange[]) => {
     setEdges((eds) => applyEdgeChanges(changes, eds));
+    onUpdateNode();
   }, []);
 
   const onConnect = useCallback((params: Edge) => {
     setEdges((eds) => addEdge(params, eds));
+    onUpdateNode();
   }, []);
 
   // Init editor instance
@@ -99,15 +106,17 @@ const WorkflowEditor = ({
     };
 
     setNodes([...nodes, newNode]);
+    onUpdateNode();
   };
 
   const onEdgeDoubleClick = (event: MouseEvent, edge: Edge) => {
-    // 删除edge
+    // delete edge
     setEdges(edges.filter((e) => e.id !== edge.id));
+    onDeleteNode();
   };
 
   const onNodeDoubleClick = (event: MouseEvent, node: Node) => {
-    // 修改node
+    // edit node
     // console.log('🚀 ~ onNodeDoubleClick ~ node:', node);
     onEdit(node);
   };
