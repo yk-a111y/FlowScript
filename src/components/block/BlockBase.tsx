@@ -55,10 +55,10 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
         style={{ transform: 'translateY(-100%)' }}
       >
         {/* insertToClipboard for Block id  */}
-        <div className="pointer-events-none">
+        <div className="pointer-events-none bg-input mb-1 w-1/2 rounded-md">
           <p
             title="Block id (click to copy)"
-            className="block-menu pointer-events-auto text-overflow inline-block px-1 dark:text-gray-300"
+            className="block-menu px-1 pointer-events-auto text-overflow inline-block dark:text-gray-300"
             style={{ maxWidth: '96px', marginBottom: 0 }}
             onClick={insertToClipboard}
           >
@@ -66,18 +66,18 @@ const BlockBase = ({ id, blockData, children }: BlockBaseProps) => {
           </p>
         </div>
         {/* Block Menu */}
-        <div className="block-menu inline-flex items-center dark:text-gray-300">
+        <div className="block-menu inline-flex items-center bg-input rounded-md dark:text-gray-300">
           <button title="Delete block" onClick={onDeleteBlock}>
-            <UiIcon name="RiDeleteBinLine" />
+            <UiIcon name="RiDeleteBinLine" size={18} />
           </button>
           <button title="Edit block" onClick={onEditBlock}>
-            <UiIcon name="RiPencilLine" />
+            <UiIcon name="RiPencilLine" size={18} />
           </button>
           <button title="Block settings">
-            <UiIcon name="RiSettings3Line" />
+            <UiIcon name="RiSettings3Line" size={18} />
           </button>
           <button title="Run workflow from here" onClick={onRunWorkflow}>
-            <UiIcon name="RiPlayLine" />
+            <UiIcon name="RiPlayLine" size={18} />
           </button>
         </div>
       </div>
