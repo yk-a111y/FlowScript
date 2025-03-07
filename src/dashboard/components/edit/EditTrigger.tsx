@@ -4,7 +4,7 @@ import UiButton from '@/components/ui/UiButton';
 import UiIcon from '@/components/ui/UiIcon';
 interface EditTriggerProps {
   compData: any;
-  updateBlockData: (key: string, value: string) => void;
+  updateBlockData: (data: any, isData?: boolean) => void;
 }
 
 const EditTrigger = ({ compData, updateBlockData }: EditTriggerProps) => {
@@ -16,7 +16,7 @@ const EditTrigger = ({ compData, updateBlockData }: EditTriggerProps) => {
         value={description}
         onChange={(e) => {
           setDescription(e.target.value);
-          updateBlockData('description', e.target.value);
+          updateBlockData({ description: e.target.value }, true);
         }}
       />
       <UiButton variant="accent" className="mt-4 w-full">

@@ -8,7 +8,7 @@ import { tasks } from '@/utils/shared';
 import { IWorkflow } from '@/dashboard/type';
 
 // *workflowStore
-interface WorkflowStoreState {
+export interface WorkflowStoreState {
   workflows: Record<string, unknown>; // Adjust the type as needed
   getWorkflows: () => IWorkflow[];
   getWorkflowById: (id: string) => IWorkflow;
@@ -57,7 +57,11 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
       retrieved: true,
     });
   },
-  updateWorkflow: async (id: string, data: any, deep: boolean = false) => {
+  updateWorkflow: async (
+    id: string,
+    data: IWorkflow,
+    deep: boolean = false
+  ) => {
     if (!get().getWorkflowById(id)) return null;
 
     const updatedWorkflows = {};
@@ -90,6 +94,11 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
     await browser.storage.local.set({ workflows: updatedWorkflows });
 
     return updatedWorkflows;
+  },
+  insert: async (data: {}, options: {}) => {
+    const insertedWorkflows = {};
+
+    return insertedWorkflows;
   },
 }));
 

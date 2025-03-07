@@ -5,7 +5,10 @@ import UiList from '@/components/ui/UiList';
 import UiListItem from '@/components/ui/UiListItem';
 import UiPopover from '@/components/ui/UiPopover';
 import { cn } from '@/lib/utils';
+import { useWorkflowStore } from '@/store/workflow';
 import { IWorkflow } from '@/types/workflow';
+import { exportWorkflow, importWorkflow } from '@/utils/workflowData';
+
 interface EditorLocalActionsProps {
   workflow: IWorkflow;
   isDataChanged: boolean;
@@ -19,10 +22,7 @@ const EditorLocalActions = ({
   onRunWorkflow,
   onSaveWorkflow,
 }: EditorLocalActionsProps) => {
-  const exportWorkflow = (workflow: IWorkflow) => {
-    console.log('🚀 ~ exportWorkflow ~ workflow:', workflow);
-  };
-
+  const workflowStore = useWorkflowStore();
   const modalActions = [
     {
       id: 'table',
@@ -46,7 +46,7 @@ const EditorLocalActions = ({
       id: 'export',
       icon: 'RiDownloadLine',
       name: 'Export Workflow',
-      action: () => exportWorkflow(workflow), // export workflow
+      action: () => exportWorkflow(workflow, workflowStore), // export workflow
       // hasAccess: isTeam ? canEdit : true,
     },
     {
@@ -70,6 +70,18 @@ const EditorLocalActions = ({
 
   return (
     <div className="top-func absolute left-0 top-0 z-10 flex w-full items-center p-4">
+      <div
+        onClick={() => exportWorkflow(workflow, workflowStore)}
+        className="cursor-pointer mr-2"
+      >
+        导出
+      </div>
+      <div
+        onClick={() => importWorkflow(workflowStore)}
+        className="cursor-pointer"
+      >
+        导入
+      </div>
       <UiCard padding="p-1 ml-4 hidden md:block pointer-events-auto">
         {modalActions.map((action) => (
           <UiButton
