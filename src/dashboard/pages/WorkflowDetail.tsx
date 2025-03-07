@@ -147,6 +147,7 @@ const WorkflowDetail = () => {
       <div className="relative flex-1 overflow-auto">
         {/* top func area */}
         <EditorLocalActions
+          workflow={workflow}
           isDataChanged={dataChanged}
           onRunWorkflow={onRunWorkflow}
           onSaveWorkflow={onSaveWorkflow}

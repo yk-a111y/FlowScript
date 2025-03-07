@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import tippy, { Instance, Props } from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/shift-toward-subtle.css';
 
 interface PopoverProps extends PropsWithChildren {
   // 基础属性
@@ -61,8 +61,9 @@ const UiPopover: React.FC<PopoverProps> = ({
 
     tippyInstance.current = tippy(target, {
       role: 'popover',
-      theme: null,
+      theme: 'my-theme',
       content: contentRef.current,
+      animation: 'shift-toward-subtle',
       placement,
       trigger,
       interactive: true,
