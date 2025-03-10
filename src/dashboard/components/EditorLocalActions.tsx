@@ -7,7 +7,7 @@ import UiPopover from '@/components/ui/UiPopover';
 import { cn } from '@/lib/utils';
 import { useWorkflowStore } from '@/store/workflow';
 import { IWorkflow } from '@/types/workflow';
-import { exportWorkflow, importWorkflow } from '@/utils/workflowData';
+import { exportWorkflow } from '@/utils/workflowData';
 
 interface EditorLocalActionsProps {
   workflow: IWorkflow;
@@ -75,12 +75,6 @@ const EditorLocalActions = ({
         className="cursor-pointer mr-2"
       >
         导出
-      </div>
-      <div
-        onClick={() => importWorkflow(workflowStore)}
-        className="cursor-pointer"
-      >
-        导入
       </div>
       <UiCard padding="p-1 ml-4 hidden md:block pointer-events-auto">
         {modalActions.map((action) => (

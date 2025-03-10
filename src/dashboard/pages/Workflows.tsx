@@ -1,19 +1,20 @@
 import UiButton from '@/components/ui/UiButton';
-import UiIcon from '@/components/ui/UiIcon';
 import WorkflowsLocal from '../components/WorkflowsLocal';
 import UiInput from '@/components/ui/UiInput';
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from '@/components/ui/UiSelect';
-import UiSelect from '@/components/ui/UiSelect';
+import { useWorkflowStore } from '@/store/workflow';
+import { importWorkflow } from '@/utils/workflowData';
+import UiPopover from '@/components/ui/UiPopover';
+import UiIcon from '@/components/ui/UiIcon';
+import UiList from '@/components/ui/UiList';
+import UiListItem from '@/components/ui/UiListItem';
 
 const Workflows = () => {
+  const workflowStore = useWorkflowStore();
   const functions = [
     {
       label: 'Import Workflow',
       value: 'import',
+      action: () => importWorkflow(workflowStore, { multiple: true }),
     },
     {
       label: 'Record Workflow',
@@ -37,23 +38,21 @@ const Workflows = () => {
           >
             New Workflow
           </UiButton>
-          <UiSelect>
-            <SelectTrigger
-              className="bg-accent h-[2.875rem] py-2 flex-1 rounded-l-none text-white hover:bg-gray-700"
-              hasIcon
-            >
-              <UiIcon name="RiArrowDownSLine" />
-            </SelectTrigger>
-            <SelectContent className="p-4 font-serif bg-white dark:bg-gray-900">
-              {functions.map((func) => {
-                return (
-                  <SelectItem showIndicator={false} value={func.value}>
-                    {func.label}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </UiSelect>
+          <UiPopover
+            renderTrigger={() => (
+              <UiButton className="rounded-l-none h-11" variant="accent">
+                <UiIcon name="RiArrowDownSLine" />
+              </UiButton>
+            )}
+          >
+            <UiList className="pointer-cursor">
+              {functions.map((item) => (
+                <UiListItem className="cursor-pointer" key={item.value}>
+                  {item.label}
+                </UiListItem>
+              ))}
+            </UiList>
+          </UiPopover>
         </div>
         {/* search */}
         <div className="relative flex-1 max-w-md">
