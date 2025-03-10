@@ -1,7 +1,13 @@
 import browser from 'webextension-polyfill';
 import { IWorkflow } from '@/types/workflow';
 import { WorkflowStoreState } from '@/store/workflow';
-import { parseJSON, fileSaver, openFilePicker } from './helper';
+import {
+  parseJSON,
+  fileSaver,
+  openFilePicker,
+  findTriggerBlock,
+} from './helper';
+import { registerWorkflowTrigger } from './workflowTrigger';
 
 export const importWorkflow = (store: WorkflowStoreState, attrs = {}) => {
   return new Promise((resolve, reject) => {
@@ -20,6 +26,19 @@ export const importWorkflow = (store: WorkflowStoreState, attrs = {}) => {
             if (typeof workflow.drawflow === 'string') {
               workflow.drawflow = parseJSON(workflow.drawflow, {});
             }
+
+            store
+              .insert({
+                ...workflow,
+                createdAt: Date.now(),
+              })
+              .then((res) => {
+                Object.values(res).forEach((item) => {
+                  const triggerBlock = findTriggerBlock(item.drawflow);
+                  registerWorkflowTrigger(item.id, triggerBlock);
+                });
+                resolve(res);
+              });
           };
 
           reader.onload = handleOnLoadReader;
@@ -108,7 +127,6 @@ export const exportWorkflow = (
   workflow: IWorkflow,
   workflowStore: WorkflowStoreState
 ) => {
-  console.log('导出', workflow);
   if (workflow.isProtected) return;
 
   const includedWorkflows = findIncludedWorkflows(workflow, workflowStore);

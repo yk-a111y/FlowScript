@@ -18,7 +18,6 @@ const WorkflowDetail = () => {
   const { editingBlock, setEditingBlock } = useEditingBlockStore();
   const { getWorkflowById, updateWorkflow } = useWorkflowStore();
   const workflow = getWorkflowById(workflowId);
-  console.log('🚀 ~ WorkflowDetail ~ workflow:', workflow);
 
   const [editor, setEditor] = useState<ReactFlowInstance>();
   const [showSidebar, setShowSidebar] = useState(true);
