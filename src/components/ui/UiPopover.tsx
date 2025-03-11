@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils';
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import tippy, { Instance, Props } from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
+import 'tippy.js/animations/shift-toward-subtle.css';
 
 interface PopoverProps extends PropsWithChildren {
-  // 基础属性
+  // basic props
   placement?: Props['placement'];
   trigger?: Props['trigger'];
   padding?: string;
@@ -22,6 +22,7 @@ interface PopoverProps extends PropsWithChildren {
   onClose?: () => void;
   onTrigger?: () => void;
   onChange?: (value: boolean) => void;
+  onItemClick?: (itemId: string) => void;
 }
 
 const UiPopover: React.FC<PopoverProps> = ({
@@ -40,6 +41,7 @@ const UiPopover: React.FC<PopoverProps> = ({
   onClose,
   onTrigger,
   onChange,
+  onItemClick,
 }) => {
   // refs
   const targetRef = useRef<HTMLDivElement>(null);
@@ -49,7 +51,7 @@ const UiPopover: React.FC<PopoverProps> = ({
   // state
   const [isShow, setIsShow] = useState(false);
 
-  // 初始化 tippy 实例
+  // initialize tippy instance
   useEffect(() => {
     if (!targetRef.current || !contentRef.current) return;
 
@@ -61,12 +63,29 @@ const UiPopover: React.FC<PopoverProps> = ({
 
     tippyInstance.current = tippy(target, {
       role: 'popover',
-      theme: null,
+      theme: 'my-theme',
       content: contentRef.current,
+      animation: 'shift-toward-subtle',
       placement,
       trigger,
       interactive: true,
       appendTo: () => document.body,
+      onCreate: (instance) => {
+        instance.popper.addEventListener('click', (e) => {
+          e.stopPropagation();
+
+          const target = e.target as HTMLElement;
+          const listItem = target.closest('.ui-list-item');
+          if (listItem && onItemClick) {
+            const itemId = listItem.getAttribute('data-item-id');
+            onItemClick(itemId);
+
+            if (itemId !== 'disable-workflow') {
+              instance.hide();
+            }
+          }
+        });
+      },
       onShow: (instance) => {
         if (triggerWidth) {
           const rect = instance.reference.getBoundingClientRect();
@@ -89,12 +108,12 @@ const UiPopover: React.FC<PopoverProps> = ({
     };
   }, []);
 
-  // 监听 options 变化
+  // listen options changes
   useEffect(() => {
     tippyInstance.current?.setProps(options);
   }, [options]);
 
-  // 监听 disabled 状态
+  // listen disabled status
   useEffect(() => {
     if (!tippyInstance.current) return;
 
@@ -106,7 +125,7 @@ const UiPopover: React.FC<PopoverProps> = ({
     }
   }, [disabled]);
 
-  // 监听 modelValue 变化
+  // listen modelValue changes
   useEffect(() => {
     if (!tippyInstance.current || modelValue === isShow) return;
 

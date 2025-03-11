@@ -7,8 +7,10 @@ import firstWorkflows from '@/utils/firstWorkflows';
 import { tasks } from '@/utils/shared';
 import { IWorkflow } from '@/dashboard/type';
 
+// TODO: optimize local storage
+
 // *workflowStore
-interface WorkflowStoreState {
+export interface WorkflowStoreState {
   workflows: Record<string, unknown>; // Adjust the type as needed
   getWorkflows: () => IWorkflow[];
   getWorkflowById: (id: string) => IWorkflow;
@@ -19,6 +21,10 @@ interface WorkflowStoreState {
     data: IWorkflow,
     deep: boolean
   ) => Promise<IWorkflow>;
+  insert: (
+    data: IWorkflow | IWorkflow[],
+    options?: DefaultWorkflowOptions
+  ) => Promise<Record<string, IWorkflow>>;
 }
 export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
   workflows: {},
@@ -26,7 +32,13 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
   retrieved: false,
   // getter
   getWorkflows: () => Object.values(get().workflows) as IWorkflow[],
-  getWorkflowById: (id: string) => get().workflows[id] as IWorkflow,
+  getWorkflowById: (id: string) => {
+    const workflows = get().workflows;
+    console.log('🚀 ~ workflows:', workflows);
+    const workflow = workflows[id] as IWorkflow;
+
+    return workflow;
+  },
   // setter
   setWorkflows: (newWorkflows: IWorkflow[]) =>
     set({ workflows: convertWorkflowsToObject(newWorkflows) }), // Setter for workflows
@@ -57,21 +69,26 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
       retrieved: true,
     });
   },
-  updateWorkflow: async (id: string, data: any, deep: boolean = false) => {
-    if (!get().getWorkflowById(id)) return null;
+  updateWorkflow: async (
+    id: string,
+    data: IWorkflow,
+    deep: boolean = false
+  ) => {
+    const currentWorkflow = get().getWorkflowById(id);
+    if (!currentWorkflow) return null;
 
     const updatedWorkflows = {};
     const updateData = { ...data, updatedAt: Date.now() };
 
     const workflowUpdater = (id: string) => {
       if (deep) {
-        get().workflows[id] = deepmerge(get().workflows[id], updateData);
+        get().workflows[id] = deepmerge(currentWorkflow, updateData);
       } else {
-        Object.assign(get().workflows[id], updateData);
+        Object.assign(currentWorkflow, updateData);
       }
 
-      get().workflows[id].updatedAt = Date.now();
-      updatedWorkflows[id] = get().getWorkflowById(id);
+      currentWorkflow.updatedAt = Date.now();
+      updatedWorkflows[id] = currentWorkflow;
 
       if (!('isDisabled' in data)) return;
       // if (data.isDisabled) {
@@ -91,6 +108,47 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
 
     return updatedWorkflows;
   },
+  insert: async (
+    data: IWorkflow | IWorkflow[],
+    options: DefaultWorkflowOptions = {}
+  ) => {
+    const insertedWorkflows = {};
+    const currentWorkflows = get().getWorkflows();
+
+    if (Array.isArray(data)) {
+      data.forEach((item: IWorkflow) => {
+        if (!options.duplicateId) {
+          delete item.id;
+        }
+
+        const workflow = defaultWorkflows(item, options);
+        currentWorkflows[workflow.id] = workflow;
+        insertedWorkflows[workflow.id] = workflow;
+      });
+    } else {
+      if (!options.duplicateId) {
+        delete data.id;
+      }
+
+      const workflow = defaultWorkflows(data, options);
+      currentWorkflows[workflow.id] = workflow;
+      insertedWorkflows[workflow.id] = workflow;
+    }
+
+    const w = Object.values(currentWorkflows).reduce((acc, workflow) => {
+      console.log('🚀 ~ workflows:Object.values ~ workflow:', workflow);
+      return {
+        ...acc,
+        [workflow.id]: workflow,
+      };
+    }, {});
+
+    await browser.storage.local.set({
+      workflows: w,
+    });
+
+    return insertedWorkflows;
+  },
 }));
 
 const convertWorkflowsToObject = (workflows: IWorkflow[]) => {
@@ -108,14 +166,14 @@ const convertWorkflowsToObject = (workflows: IWorkflow[]) => {
 
 // Default Workflow Format
 interface DefaultWorkflowOptions {
-  duplicateId?: string;
+  duplicateId?: boolean;
 }
-const defaultWorkflows = (
+const defaultWorkflows: (
   data: IWorkflow,
-  options: DefaultWorkflowOptions = {}
-) => {
+  options?: DefaultWorkflowOptions
+) => IWorkflow = (data, options = {}) => {
   let workflowData: IWorkflow = {
-    id: 'K_DOm5PCBGSWf1e90io1a',
+    id: nanoid(),
     name: '',
     icon: 'riGlobalLine',
     folderId: null,
@@ -159,8 +217,7 @@ const defaultWorkflows = (
       insertDefaultColumn: false,
       defaultColumnName: 'column',
     },
-    // TODO version: browser.runtime.getManifest().version,
-    version: '1.28.17',
+    version: browser.runtime.getManifest().version,
     globalData: '{\n\t"key": "value"\n}',
   };
 

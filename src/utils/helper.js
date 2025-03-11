@@ -42,7 +42,7 @@ const findTriggerBlock = (drawflow = {}) => {
   return null;
 }
 
-const parseJSON = (data, def) => {
+const parseJSON = (data, def = {}) => {
   try {
     const result = JSON.parse(data);
 
@@ -94,6 +94,48 @@ const deepMerge = (target, obj) => {
   return res;
 }
 
+const fileSaver = (filename, data, revokeBlobURL = false) => {
+  const anchor = document.createElement('a');
+  anchor.download = filename;
+  anchor.href = data;
+  anchor.style.display = 'none';
+  document.body.appendChild(anchor);
+
+  anchor.click();
+
+  setTimeout(() => {
+    document.body.removeChild(anchor);
+    // If it's a Blob URL, release it
+    if (revokeBlobURL) URL.revokeObjectURL(data);
+  }, 100);
+};
+
+const openFilePicker = (acceptedFileTypes = [], attrs = {}) => {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = Array.isArray(acceptedFileTypes) ? acceptedFileTypes.join(',') : acceptedFileTypes;
+
+    Object.entries(attrs).forEach(([key, value]) => {
+      input[key] = value;
+    });
+
+    input.onchange = (e) => {
+      const { files } = e.target;
+      const validFiles = [];
+
+      Array.from(files).forEach((file) => {
+        if (!acceptedFileTypes.includes(file.type)) return;
+        validFiles.push(file);
+      });
+
+      resolve(validFiles);
+    }
+
+    input.click();
+  })
+}
+
 export {
   convertToObj,
   sleep,
@@ -105,4 +147,6 @@ export {
   toCamelCase,
   isXPath,
   deepMerge,
+  fileSaver,
+  openFilePicker,
 };

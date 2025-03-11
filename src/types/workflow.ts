@@ -5,6 +5,7 @@ export interface IWorkflow {
   name?: string;
   description?: string;
   icon?: string;
+  isProtected?: boolean;
   isDisabled?: boolean;
   extVersion?: string;
   version?: string;

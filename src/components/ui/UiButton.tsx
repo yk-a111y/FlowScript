@@ -10,6 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-input',
+        ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800',
         accent:
           'bg-accent hover:bg-gray-700 dark:bg-gray-100 dark:hover:bg-gray-200 dark:text-black text-white',
         primary:
