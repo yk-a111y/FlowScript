@@ -142,7 +142,6 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
         [workflow.id]: workflow,
       };
     }, {});
-    console.log('🚀 ~ w ~ w:', w);
 
     await browser.storage.local.set({
       workflows: w,

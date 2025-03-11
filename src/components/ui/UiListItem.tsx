@@ -8,7 +8,6 @@ interface UiListItemProps {
   color?: string;
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
 }
 
 const UiListItem: React.FC<UiListItemProps> = ({
@@ -19,7 +18,6 @@ const UiListItem: React.FC<UiListItemProps> = ({
   color = 'bg-primary text-primary dark:bg-secondary dark:text-secondary bg-opacity-10 dark:bg-opacity-10',
   children,
   className = '',
-  onClick,
   ...rest
 }) => {
   const Tag = tag as React.ElementType;
@@ -34,15 +32,8 @@ const UiListItem: React.FC<UiListItemProps> = ({
     .filter(Boolean)
     .join(' ');
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    console.log('🚀 ~ onClick ~ e:', e);
-    // 调用外部传入的onClick处理器
-    onClick();
-  };
-
   return (
-    <Tag role="listitem" className={classNames} {...rest} onClick={handleClick}>
+    <Tag role="listitem" className={classNames} {...rest}>
       {children}
     </Tag>
   );

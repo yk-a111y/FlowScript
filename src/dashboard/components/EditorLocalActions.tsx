@@ -7,7 +7,7 @@ import UiPopover from '@/components/ui/UiPopover';
 import { cn } from '@/lib/utils';
 import { useWorkflowStore } from '@/store/workflow';
 import { IWorkflow } from '@/types/workflow';
-import { exportWorkflow, importWorkflow } from '@/utils/workflowData';
+import { exportWorkflow } from '@/utils/workflowData';
 
 interface EditorLocalActionsProps {
   workflow: IWorkflow;
@@ -43,6 +43,22 @@ const EditorLocalActions = ({
 
   const moreActions = [
     {
+      id: 'copy-workflow-id',
+      icon: 'RiFileCopyLine',
+      name: 'Copy Workflow Id',
+      action: () => {
+        navigator.clipboard.writeText(workflow.id || '');
+      },
+    },
+    {
+      id: 'disable-workflow',
+      icon: 'RiToggleLine',
+      name: 'Disable Workflow',
+      action: () => {
+        console.log('disable workflow');
+      },
+    },
+    {
       id: 'export',
       icon: 'RiDownloadLine',
       name: 'Export Workflow',
@@ -68,20 +84,13 @@ const EditorLocalActions = ({
     },
   ];
 
+  const handleItemClick = (itemId: string) => {
+    const item = moreActions.find((item) => item.id === itemId);
+    if (item) item.action?.();
+  };
+
   return (
     <div className="top-func absolute left-0 top-0 z-10 flex w-full items-center p-4">
-      <div
-        onClick={() => exportWorkflow(workflow, workflowStore)}
-        className="cursor-pointer mr-2"
-      >
-        导出
-      </div>
-      <div
-        onClick={() => importWorkflow(workflowStore)}
-        className="cursor-pointer"
-      >
-        导入
-      </div>
       <UiCard padding="p-1 ml-4 hidden md:block pointer-events-auto">
         {modalActions.map((action) => (
           <UiButton
@@ -110,19 +119,13 @@ const EditorLocalActions = ({
               <UiIcon name="RiMore2Line" size={30} />
             </UiButton>
           )}
+          onItemClick={handleItemClick}
         >
           <UiList style={{ minWidth: '7rem' }}>
-            <UiListItem className="cursor-pointer">
-              <UiIcon name="RiFileCopyLine" size={30} className="mr-2 -ml-1" />
-              Copy workflow Id
-            </UiListItem>
-            <UiListItem className="cursor-pointer">
-              <UiIcon name="RiToggleLine" size={30} className="mr-2 -ml-1" />
-              Disable Workflow
-            </UiListItem>
             {moreActions.map((item) => (
               <UiListItem
                 key={item.id}
+                data-item-id={item.id}
                 className={cn('cursor-pointer hoverable', item.attrs?.class)}
               >
                 <UiIcon name={item.icon} size={30} className="mr-2 -ml-1" />

@@ -61,7 +61,6 @@ export const registerWorkflowTrigger = async (
   workflowId: string,
   triggerBlock: IWorkflow['drawflow']['nodes']
 ) => {
-  console.log('🚀 ~ triggerBlock:', triggerBlock);
   try {
     const { data } = triggerBlock;
     await cleanWorkflowTriggers(workflowId, data && data?.triggers);

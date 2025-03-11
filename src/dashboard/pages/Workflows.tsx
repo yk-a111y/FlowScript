@@ -12,19 +12,28 @@ const Workflows = () => {
   const workflowStore = useWorkflowStore();
   const functions = [
     {
+      id: 'import',
       label: 'Import Workflow',
       value: 'import',
       action: () => importWorkflow(workflowStore, { multiple: true }),
     },
     {
+      id: 'record',
       label: 'Record Workflow',
       value: 'record',
     },
     {
+      id: 'hosted',
       label: 'Add Hosted Workflow',
       value: 'hosted',
     },
   ];
+
+  const handleItemClick = (itemId: string) => {
+    const item = functions.find((item) => item.id === itemId);
+    if (item) item.action?.();
+  };
+
   return (
     <div className="p-10">
       <h1 className="text-2xl font-semibold capitalize">Workflows</h1>
@@ -44,10 +53,15 @@ const Workflows = () => {
                 <UiIcon name="RiArrowDownSLine" />
               </UiButton>
             )}
+            onItemClick={handleItemClick}
           >
             <UiList className="pointer-cursor">
               {functions.map((item) => (
-                <UiListItem className="cursor-pointer" key={item.value}>
+                <UiListItem
+                  className="cursor-pointer"
+                  key={item.value}
+                  data-item-id={item.id}
+                >
                   {item.label}
                 </UiListItem>
               ))}
