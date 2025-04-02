@@ -4,7 +4,7 @@ import { useWorkflowStore } from '@/store/workflow';
 import Sidebar from './components/Sidebar';
 
 const DashBoardApp = () => {
-  const { loadData } = useWorkflowStore();
+  const loadData = useWorkflowStore((state) => state.loadData);
 
   // Init Workflow Data
   useEffect(() => {

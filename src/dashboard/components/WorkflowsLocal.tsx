@@ -5,7 +5,7 @@ import { executeWorkflow } from '@/workflowEngine';
 const WorkflowsLocal = () => {
   const { getWorkflows } = useWorkflowStore();
   const workflows = getWorkflows();
-  console.log('🚀 ~ WorkflowsLocal ~ workflows:', workflows);
+  // console.log('🚀 ~ WorkflowsLocal ~ workflows:', workflows);
 
   return (
     <div className="workflows-container w-full">

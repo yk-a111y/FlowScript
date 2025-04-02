@@ -31,17 +31,19 @@ export const useWorkflowStore = create<WorkflowStoreState>((set, get) => ({
   isFirstTime: false,
   retrieved: false,
   // getter
-  getWorkflows: () => Object.values(get().workflows) as IWorkflow[],
-  getWorkflowById: (id: string) => {
-    const workflows = get().workflows;
-    console.log('🚀 ~ workflows:', workflows);
-    const workflow = workflows[id] as IWorkflow;
+  getWorkflows: (): IWorkflow[] => {
+    const workflows = get().workflows || {};
+    return Object.values(workflows);
+  },
+  getWorkflowById: (id: string): IWorkflow => {
+    const workflows = get().workflows || {};
+    const workflow = workflows[id];
 
     return workflow;
   },
   // setter
   setWorkflows: (newWorkflows: IWorkflow[]) =>
-    set({ workflows: convertWorkflowsToObject(newWorkflows) }), // Setter for workflows
+    set({ workflows: convertWorkflowsToObject(newWorkflows) }),
   // actions
   loadData: async () => {
     const { workflows, isFirstFromStorage } = await browser.storage.local.get([

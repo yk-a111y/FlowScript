@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill';
 import { waitTabLoaded } from '../helper';
 
 async function newTab({ id, data }) {
+  console.log('🚀 ~ newTab ~ data:', data);
   if (this.windowId) {
     try {
       await browser.windows.get(this.windowId);
