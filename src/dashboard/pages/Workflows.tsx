@@ -1,15 +1,27 @@
-import UiButton from '@/components/ui/UiButton';
-import WorkflowsLocal from '../components/WorkflowsLocal';
-import UiInput from '@/components/ui/UiInput';
+import { useState } from 'react';
 import { useWorkflowStore } from '@/store/workflow';
 import { importWorkflow } from '@/utils/workflowData';
+import UiButton from '@/components/ui/UiButton';
+import UiInput from '@/components/ui/UiInput';
 import UiPopover from '@/components/ui/UiPopover';
 import UiIcon from '@/components/ui/UiIcon';
 import UiList from '@/components/ui/UiList';
 import UiListItem from '@/components/ui/UiListItem';
+import UiModal from '@/components/ui/UiModal';
+import WorkflowsLocal from '../components/WorkflowsLocal';
+import UiTextarea from '@/components/ui/UiTextarea';
+import { useNavigate } from 'react-router-dom';
 
 const Workflows = () => {
+  const navigate = useNavigate();
   const workflowStore = useWorkflowStore();
+  const [addWorkflowModal, setAddWorkflowModal] = useState({
+    name: '',
+    show: false,
+    type: 'manual',
+    description: '',
+  });
+
   const functions = [
     {
       id: 'import',
@@ -34,6 +46,32 @@ const Workflows = () => {
     if (item) item.action?.();
   };
 
+  const clearAddWorkflowModal = () => {
+    setAddWorkflowModal({
+      name: '',
+      show: false,
+      type: 'manual',
+      description: '',
+    });
+  };
+
+  const addWorkflow = () => {
+    workflowStore
+      .insert({
+        name: addWorkflowModal.name,
+        description: addWorkflowModal.description,
+      })
+      .then((workflows) => {
+        console.log('🚀 ~ .then ~ workflows:', workflows);
+        const workflowId = Object.keys(workflows)[0];
+        console.log('🚀 ~ .then ~ workflowId:', workflowId);
+        navigate(`/workflow/${workflowId}`);
+      })
+      .finally(() => {
+        clearAddWorkflowModal();
+      });
+  };
+
   return (
     <div className="p-10">
       <h1 className="text-2xl font-semibold capitalize">Workflows</h1>
@@ -44,6 +82,9 @@ const Workflows = () => {
           <UiButton
             className="h-11 w-60 rounded-r-none border-r font-semibold"
             variant="accent"
+            onClick={() =>
+              setAddWorkflowModal({ ...addWorkflowModal, show: true })
+            }
           >
             New Workflow
           </UiButton>
@@ -81,6 +122,47 @@ const Workflows = () => {
       <div className="flex items-start mt-8">
         <WorkflowsLocal />
       </div>
+      {/* Modal */}
+      <UiModal
+        title="Workflow"
+        open={addWorkflowModal.show}
+        onClose={() =>
+          setAddWorkflowModal({ ...addWorkflowModal, show: false })
+        }
+      >
+        <UiInput
+          className="mb-4 w-full"
+          value={addWorkflowModal.name}
+          placeholder="Name"
+          autoFocus
+          onChange={(e) =>
+            setAddWorkflowModal({ ...addWorkflowModal, name: e.target.value })
+          }
+        />
+        <UiTextarea
+          className="w-full dark:text-gray-200"
+          value={addWorkflowModal.description}
+          placeholder="Description"
+          max={300}
+          onChange={(e) =>
+            setAddWorkflowModal({
+              ...addWorkflowModal,
+              description: e.target.value,
+            })
+          }
+        />
+        <p className="mb-6 text-right text-gray-600 dark:text-gray-200">
+          {addWorkflowModal.description.length}/300
+        </p>
+        <div className="flex space-x-2">
+          <UiButton className="w-full" onClick={clearAddWorkflowModal}>
+            Cancel
+          </UiButton>
+          <UiButton className="w-full" variant="accent" onClick={addWorkflow}>
+            Add Workflow
+          </UiButton>
+        </div>
+      </UiModal>
     </div>
   );
 };

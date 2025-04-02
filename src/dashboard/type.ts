@@ -11,7 +11,7 @@ export interface IWorkflow {
   updatedAt?: number;
   createdAt?: number;
   globalData?: string;
-  drawflow: IWorkflowDrawflow;
+  drawflow?: IWorkflowDrawflow;
   table?: IWorkflowTabel[];
   settings?: IWorkflowSettings;
   content?: string | null;
